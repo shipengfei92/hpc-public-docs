@@ -1,0 +1,20 @@
+% SSH用户手册
+% 裴焅达
+% 2013年7月6日
+
+# 如何使用SSH连接集群
+
+## 客户端设置
+
+在```~/.ssh/config```添加如下内容：
+
+	Host github.com
+	HostName 127.0.0.1
+
+运行命令：
+
+	$ ssh -T git@github.com
+
+# Linux常用命令
+
+
