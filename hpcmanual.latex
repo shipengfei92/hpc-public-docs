@@ -1,4 +1,4 @@
-\documentclass[cs4size, a4paper, openany]{hpcmanual}
+\documentclass[cs4size, a4paper]{hpcmanual}
 
 $if(title)$
 \title{$title$}
