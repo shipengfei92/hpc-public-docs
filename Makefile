@@ -24,7 +24,7 @@ $(DOCCLASS).latex :
 	@wget -q https://raw.github.com/weijianwen/hpc-manual-class/master/$@ -O ./$@ 
 	
 $(MAIN).tex : $(DOCCLASS).cls $(DOCCLASS).cfg $(DOCCLASS).latex $(MAIN).mkd
-	@pandoc -f markdown -t latex --template=$(DOCCLASS).latex -s $*.mkd > $@
+	@pandoc -f markdown -t latex --template=$(DOCCLASS).latex --toc -s $*.mkd > $@
 
 $(MAIN).pdf : $(MAIN).tex $(DOCCLASS).cls $(DOCCLASS).cfg
 	-@latexmk -silent -f -pdf $*

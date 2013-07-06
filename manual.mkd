@@ -1,8 +1,8 @@
-% SSH用户手册
-% 裴焅达
+% SSH命令入门
+% 上海交通大学网络信息中心高性能计算部
 % 2013年7月6日
 
-# 如何使用SSH连接集群
+# 使用SSH连接集群 
 
 ## 客户端设置
 
@@ -11,10 +11,23 @@
 	Host github.com
 	HostName 127.0.0.1
 
-运行命令：
+运行命令进行连接测试：
 
 	$ ssh -T git@github.com
 
-# Linux常用命令
+# 常用Linux命令
+
+## ls：查看目录内容
+
+* ls 无参数，区别于ls -a;
+* ls -a 显示所有文件，包括. .. .htaccess .bash_history  .bash_profile .bashrc .cshrc等文件；
+* ls -A 跟 -a 参数的区别是  不显示 . ..目录；
+* ls -alh 这个指令意思就是 -a显示全部 -l详细列表 -h  (human)的意思，给人看的格式human；
+
+## mv：移动文件
+
+* mv hzlzh.txt ..  将当前目录的hzlzh.txt移动到上一级目录 ；
+* mv test.txt hzlzh.txt 将test.txt重命名为hzlzh.txt
+
 
 
