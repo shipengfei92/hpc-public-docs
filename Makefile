@@ -4,7 +4,8 @@ SED = gsed
 
 MAIN = manual
 DOCCLASS = hpcmanual
-LATEX_OPT = -xelatex -silent -f
+# LATEX_OPT = -xelatex -silent -f
+LATEX_OPT = -xelatex -f
 REPOURL = https://raw.github.com/weijianwen/hpc-manual-class/master
 # pdf viewer: evince/open
 VIEWER = open

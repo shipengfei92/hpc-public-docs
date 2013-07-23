@@ -31,5 +31,8 @@
 \parskip 0.5ex plus 0.25ex minus 0.25ex
 \addtolength{\voffset}{-0.5cm}
 
+%% Longtable
+\RequirePackage{longtable}
+
 %% End of file hpcmanual.cls
 \endinput

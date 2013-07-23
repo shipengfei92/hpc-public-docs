@@ -29,5 +29,17 @@
 * mv hzlzh.txt ..  将当前目录的hzlzh.txt移动到上一级目录 ；
 * mv test.txt hzlzh.txt 将test.txt重命名为hzlzh.txt
 
+-------------------------------------------------------------
+ Centered   Default           Right Left
+  Header    Aligned         Aligned Aligned
+----------- ------- --------------- -------------------------
+   First    row                12.0 Example of a row that
+                                    spans multiple lines.
 
+  Second    row                 5.0 Here's another one. Note
+                                    the blank line between
+                                    rows.
+-------------------------------------------------------------
 
+Table: Here's the caption. It, too, may span
+multiple lines.
