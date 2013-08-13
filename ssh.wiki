@@ -1,0 +1,19 @@
+= 准备工作 =
+
+= 下载客户端 =
+
+== Windows ==
+
+== Linux/Unix/Mac ==
+
+= 客户端设置 =
+
+=== 添加内容 ===
+
+在<code>~/.ssh/config</code>添加如下内容：
+
+<pre>Host github.com
+HostName 127.0.0.1</pre>
+运行命令进行连接测试：
+
+<pre>% ls -al</pre>
