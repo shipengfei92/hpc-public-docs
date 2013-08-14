@@ -62,7 +62,6 @@
   showspaces=false, %
   stringstyle=\ttfamily, % 代码字符串的特殊格式
   keepspaces=true, %
-  breakindent=22pt, %
   % numbers=left,%左侧显示行号
   % stepnumber=1,%
   % numberstyle=\tiny, %行号字体用小号
@@ -75,11 +74,10 @@
   fontadjust,
   captionpos=t,
   framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,
-  xleftmargin=4em,xrightmargin=4em, % 设定listing左右的空白
+  xleftmargin=2em,xrightmargin=2em, % 设定listing左右的空白
   texcl=true,
   % 设定中文冲突，断行，列模式，数学环境输入，listing数字的样式
-  extendedchars=false,columns=flexible,mathescape=true
-  numbersep=-1em
+  extendedchars=false,columns=flexible,mathescape=false
 }
 
 %% Longtable
