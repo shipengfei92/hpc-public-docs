@@ -1,4 +1,4 @@
-\documentclass[cs4size, a4paper]{hpcmanual}
+\documentclass{hpcmanual}
 
 $if(title)$
 \title{$title$}
@@ -17,6 +17,7 @@ $endif$
 
 $if(toc)$
 \tableofcontents
+\newpage
 $endif$
 
 $body$
