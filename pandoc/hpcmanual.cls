@@ -12,7 +12,7 @@
 \DeclareOption{notypeinfo}{\hpc@typeinfofalse}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{ctexart}}
 \ProcessOptions
-\LoadClass[fancyhdr,fntef,UTF8,adobefonts]{ctexart}[2005/11/25]
+\LoadClass[fancyhdr,fntef,UTF8,cs4size,adobefonts]{ctexart}[2005/11/25]
 
 %% Import hpcmanual.cfg file
 \AtEndOfPackage{\makeatletter\input{hpcmanual.cfg}\makeatother}
@@ -82,6 +82,9 @@
 
 %% Longtable
 \RequirePackage{longtable}
+
+%% Graphpath
+\graphicspath{{figure/}{figures/}{logo/}{logos/}{graph/}{graphs}} 
 
 %% End of file hpcmanual.cls
 \endinput

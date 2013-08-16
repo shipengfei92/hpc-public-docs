@@ -59,11 +59,11 @@ Windows用户使用Putty进行SSH登录
 
 Windows用户启动Putty后，请在界面中填写SSH登录节点的地址(```IP address```)、SSH端口(```port```)，然后点击```Open```连接，如图1所示。
 
-![在Putty界面中填写SSH地址和端口](./figures/ssh/putty1.png)
+![在Putty界面中填写SSH地址和端口](putty1.png)
 
 在弹出的终端窗口中，输入SSH用户名和密码进行登录，如图2所示。*注意：在输入密码的过程中，没有```*```字符回显提示，请照常输入密码并按回车键确认。*
 
-![在Putty终端窗口中输入用户名和密码登录](./figures/ssh/putty2.png)
+![在Putty终端窗口中输入用户名和密码登录](putty2.png)
 
 Linux/Unix/Mac用户使用命令行工具进行SSH登录
 ------
@@ -80,9 +80,9 @@ Windows用户使用WinSCP传输文件
 
 Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件。如图所示，在WinSCP中填写登录节点地址(```Host name```)、SSH端口号(```Port number```)、SSH用户名(```User name```)、SSH密码(```Password```)，点击```Login``后连接。WinSCP使用方法与FTP客户端类似，如图4所示。
 
-![在WinSCP中设定SSH连接参数](figures/ssh/winscp.png)
+![在WinSCP中设定SSH连接参数](winscp.png)
 
-![WinSCP操作界面](figures/ssh/winscp2.png)
+![WinSCP操作界面](winscp2.png)
 
 Linux/Unix/Mac用户使用scp和sftp传输文件
 ------

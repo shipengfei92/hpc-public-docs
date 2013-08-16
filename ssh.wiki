@@ -45,11 +45,11 @@ Linux/Unix/Mac等*NIX操作系统自带了SSH客户端的命令行工具，包�
 
 Windows用户启动Putty后，请在界面中填写SSH登录节点的地址(<code>IP address</code>)、SSH端口(<code>port</code>)，然后点击<code>Open</code>连接，如图1所示。
 
-[[Image:./figures/ssh/putty1.png|frame|none|alt=|caption 在Putty界面中填写SSH地址和端口]]
+[[Image:putty1.png|frame|none|alt=|caption 在Putty界面中填写SSH地址和端口]]
 
 在弹出的终端窗口中，输入SSH用户名和密码进行登录，如图2所示。''注意：在输入密码的过程中，没有<code>*</code>字符回显提示，请照常输入密码并按回车键确认。''
 
-[[Image:./figures/ssh/putty2.png|frame|none|alt=|caption 在Putty终端窗口中输入用户名和密码登录]]
+[[Image:putty2.png|frame|none|alt=|caption 在Putty终端窗口中输入用户名和密码登录]]
 
 == Linux/Unix/Mac用户使用命令行工具进行SSH登录 ==
 
@@ -62,9 +62,9 @@ Linux/Unix/Mac用户可以在终端中使用命令行工具登录。下面的命
 
 Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件。如图所示，在WinSCP中填写登录节点地址(<code>Host name</code>)、SSH端口号(<code>Port number</code>)、SSH用户名(<code>User name</code>)、SSH密码(<code>Password</code>)，点击`<code>Login</code>后连接。WinSCP使用方法与FTP客户端类似，如图4所示。
 
-[[Image:figures/ssh/winscp.png|frame|none|alt=|caption 在WinSCP中设定SSH连接参数]]
+[[Image:winscp.png|frame|none|alt=|caption 在WinSCP中设定SSH连接参数]]
 
-[[Image:figures/ssh/winscp2.png|frame|none|alt=|caption WinSCP操作界面]]
+[[Image:winscp2.png|frame|none|alt=|caption WinSCP操作界面]]
 
 == Linux/Unix/Mac用户使用scp和sftp传输文件 ==
 
