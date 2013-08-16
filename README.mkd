@@ -1,0 +1,5 @@
+
+# Reference
+* "High Performance Computing Service in Cambridge University" http://www.hpc.cam.ac.uk/user/quickstart.html
+* "High Performance Computing at NYU" https://wikis.nyu.edu/display/NYUHPC/High+Performance+Computing+at+NYU
+* "PennState Univ. Research Computing and Cyberinfrastructure" http://rcc.its.psu.edu/user_guides/
