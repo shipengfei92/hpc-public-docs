@@ -34,7 +34,8 @@
     Password: YOUR_PASSWORD
     Home: /lustre/home/YOUR_HOME
 
-管理员为这位用户分配的的SSH用户名是```YOUR_USERNAME```，SSH密码是```YOUR_PASSWORD```，SSH登录节点的IP地址是```202.120.58.229```，SSH端口是22，用户家目录是```/lustre/home/YOUR_HOME。
+管理员为这位用户分配的的SSH用户名是```YOUR_USERNAME```，SSH密码是```YOUR_PASSWORD```，SSH登录节点的IP地址是```202.120.58.229```，SSH端口是22，用户家目录是
+```/lustre/home/YOUR_HOME```。
 
 *注意：为叙述方便，下文将沿用这个邮件片段中的登录信息。在实际操作时，请以您收到的邮件为准。建议妥善备份您的登录信息。*
 
