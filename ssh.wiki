@@ -23,7 +23,7 @@ SSH Port: 22
 Username: YOUR_USERNAME
 Password: YOUR_PASSWORD
 Home: /lustre/home/YOUR_HOME</pre>
-管理员为这位用户分配的的SSH用户名是<code>YOUR_USERNAME</code>，SSH密码是<code>YOUR_PASSWORD</code>，SSH登录节点的IP地址是<code>202.120.58.229</code>，SSH端口是22，用户家目录是```/lustre/home/YOUR_HOME。
+管理员为这位用户分配的的SSH用户名是<code>YOUR_USERNAME</code>，SSH密码是<code>YOUR_PASSWORD</code>，SSH登录节点的IP地址是<code>202.120.58.229</code>，SSH端口是22，用户家目录是 <code>/lustre/home/YOUR_HOME</code>。
 
 ''注意：为叙述方便，下文将沿用这个邮件片段中的登录信息。在实际操作时，请以您收到的邮件为准。建议妥善备份您的登录信息。''
 

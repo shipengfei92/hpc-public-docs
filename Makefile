@@ -45,3 +45,7 @@ update :
 distclean : clean
 	-@rm *.pdf
 	-@latexmk -f -C $(man_SSH)
+
+release :
+	git push gitlab
+	git push github
