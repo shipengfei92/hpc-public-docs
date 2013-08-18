@@ -60,11 +60,13 @@ Linux/Unix/Mac用户可以在终端中使用命令行工具登录。下面的命
 
 == Windows用户使用WinSCP传输文件 ==
 
-Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件。如图所示，在WinSCP中填写登录节点地址(<code>Host name</code>)、SSH端口号(<code>Port number</code>)、SSH用户名(<code>User name</code>)、SSH密码(<code>Password</code>)，点击<code>Login</code>后连接。WinSCP使用方法与FTP客户端类似，如图4所示。
+Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件。如图所示，在WinSCP中填写登录节点地址(<code>Host name</code>)、SSH端口号(<code>Port number</code>)、SSH用户名(<code>User name</code>)、SSH密码(<code>Password</code>)，点击<code>Login</code>后连接。WinSCP使用方法与图形界面的FTP客户端类似，如图4所示。
 
 [[Image:winscp.png|frame|none|alt=|caption 在WinSCP中设定SSH连接参数]]
 
 [[Image:winscp2.png|frame|none|alt=|caption WinSCP操作界面]]
+
+
 
 == Linux/Unix/Mac用户使用scp和sftp传输文件 ==
 
@@ -74,9 +76,11 @@ Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件�
 下面的命令将家目录下的<code>data.out</code>下载到本地当前目录。
 
 <pre>$ scp -P 22 YOUR_USERNAME@202.120.58.229:data.out ./</pre>
-若要进行更复杂的数据传输操作，可以使用<code>sftp</code>，用法与FTP类似。
+若要进行更复杂的数据传输操作，可以使用<code>sftp</code>，用法与命令行的FTP客户端类似。
 
-<pre>$ sftp -P 22 YOUR_USERNAME@202.120.58.229</pre>
+<pre>$ sftp -P 22 YOUR_USERNAME@202.120.58.229
+Connected to 202.120.58.229.
+sftp&gt; ls</pre>
 = 免密码交互登录 =
 
 ''注意：“免密码交互登录”仅适用于使用SSH命令行工具的Linux/UNIX/Mac用户。''

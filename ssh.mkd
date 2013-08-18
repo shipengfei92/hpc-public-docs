@@ -1,6 +1,7 @@
 % 使用SSH登录高性能计算集群
-% 上海交通大学网络信息中心高性能计算部
-% 2013年8月16日 更新
+% 上海交通大学高性能计算中心\
+<http://hpc.sjtu.edu.cn>
+% 2013年8月18日 更新
 
 这份文档将指导您通过SSH远程登录海交通大学高性能计算集群。
 在继续阅读本文档前，您应该对“Linux/Unix”、“终端”、“命令提示符”、“SSH远程登录”有所了解。您可以阅读[参考资料]中的材料，初步了解这些概念。
@@ -78,11 +79,13 @@ Linux/Unix/Mac用户可以在终端中使用命令行工具登录。下面的命
 Windows用户使用WinSCP传输文件
 ------
 
-Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件。如图所示，在WinSCP中填写登录节点地址(```Host name```)、SSH端口号(```Port number```)、SSH用户名(```User name```)、SSH密码(```Password```)，点击```Login```后连接。WinSCP使用方法与FTP客户端类似，如图4所示。
+Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件。如图所示，在WinSCP中填写登录节点地址(```Host name```)、SSH端口号(```Port number```)、SSH用户名(```User name```)、SSH密码(```Password```)，点击```Login```后连接。WinSCP使用方法与图形界面的FTP客户端类似，如图4所示。
 
 ![在WinSCP中设定SSH连接参数](winscp.png)
 
 ![WinSCP操作界面](winscp2.png)
+
+\clearpage
 
 Linux/Unix/Mac用户使用scp和sftp传输文件
 ------
@@ -95,9 +98,11 @@ Linux/Unix/Mac用户使用scp和sftp传输文件
 
 	$ scp -P 22 YOUR_USERNAME@202.120.58.229:data.out ./
 
-若要进行更复杂的数据传输操作，可以使用```sftp```，用法与FTP类似。
+若要进行更复杂的数据传输操作，可以使用```sftp```，用法与命令行的FTP客户端类似。
 	
 	$ sftp -P 22 YOUR_USERNAME@202.120.58.229
+	Connected to 202.120.58.229.
+	sftp> ls
 
 
 免密码交互登录
