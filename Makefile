@@ -2,7 +2,7 @@
 
 SED = gsed
 
-man_SSH  := ssh
+man_LSF  := lsf
 DOCCLASS := hpcmanual
 # LATEX_OPT = -xelatex -silent -f
 LATEX_OPT = -gg -xelatex -f
@@ -19,7 +19,7 @@ VERSION = 0.5.3
 .PHONY : all clean version distclean release
 .PRECIOUS : %.tex
 
-all: $(man_SSH).pdf $(man_SSH).wiki
+all: $(man_LSF).pdf $(man_LSF).wiki
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
 	-@latexmk $(LATEX_OPT) $*
@@ -34,7 +34,7 @@ $(DOCCLASS).% :
 	cp pandoc/$@ ./
 
 clean :
-	-@latexmk -f -c $(man_SSH)
+	-@latexmk -f -c $(man_LSF)
 	-@rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out *.cfg *.cls *.latex
 
 update :
@@ -44,7 +44,7 @@ update :
 
 distclean : clean
 	-@rm *.pdf
-	-@latexmk -f -C $(man_SSH)
+	-@latexmk -f -C $(man_LSF)
 
 release :
 	git push gitlab
