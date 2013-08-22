@@ -85,7 +85,7 @@ sftp&gt; ls</pre>
 
 ''注意：“免密码交互登录”仅适用于使用SSH命令行工具的Linux/UNIX/Mac用户。''
 
-“免密码交互登录”不需要在登录时键入用户名和密码，还可以指定服务器别名简化命令。 免密码登录需要建立'''远端主机'''(集群登录节点)，对'''本地主机'''(您的计算机)的SSH信任关系。 建立信任关系后，双方通过SSH密钥对鉴权，无需交互输入密码。
+“免密码交互登录”不需要在登录时键入用户名和密码，还可以指定服务器别名简化命令。 免密码登录需要建立'''远端主机'''(集群登录节点)，对'''本地主机'''(您的计算机)的SSH信任关系。 建立信任关系后，双方通过SSH密钥对鉴权，无需交互输入密码。 关于SSH密钥对的更多信息，请阅读[#参考资料]中的内容。
 
 首先，需要生成本地主机的SSH密钥对。 您可以根据实际需要选择是否使用口令保护密钥对(建议选“是”，且不要选择SSH密码作为口令)。 若选择使用口令保护密钥对，则每次使用私钥进行鉴权时，都需要输入口令。 Mac系统可以自动记住这个口令，使用很方便；Linux/UNIX用户可使用[https://wiki.gentoo.org/wiki/Keychain keychain]辅助SSH密钥管理。
 
@@ -138,5 +138,6 @@ User YOUR_USERNAME</pre>
 * “鸟哥的Linux私房菜：SSH服务器” http://vbird.dic.ksu.edu.tw/linux_server/0310telnetssh.php#ssh_server
 * “Simplify Your Life With an SSH Config File” http://nerderati.com/2011/03/simplify-your-life-with-an-ssh-config-file/
 * “keychain: Set Up Secure Passwordless SSH Access For Backup Scripts” http://www.cyberciti.biz/faq/ssh-passwordless-login-with-keychain-for-scripts/
+* “使用putty密码远程登录OpenSSH” http://www.linuxfly.org/post/175/
 
 <references />

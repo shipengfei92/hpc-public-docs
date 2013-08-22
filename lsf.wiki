@@ -2,76 +2,167 @@
 
 遵循文档的操作规范和反馈方法，将帮助您顺利完成工作。也欢迎大家对文档内容提出建议，谢谢！
 
-= 作业提交 =
+= 通过LSF集群运行状态 =
 
-== 设置环境变量 ==
+== 查看LSF计算节点列表<code>bhosts</code> ==
+
+<pre># bhosts
+HOST_NAME          STATUS       JL/U    MAX  NJOBS    RUN  SSUSP  USUSP    RSV
+fat01              ok              -     16      0      0      0      0      0
+fat02              ok              -     16      0      0      0      0      0
+fat03              ok              -     16      0      0      0      0      0
+fat04              ok              -     16      0      0      0      0      0
+fat05              ok              -     16      0      0      0      0      0
+fat06              ok              -     16      0      0      0      0      0
+fat07              ok              -     16      0      0      0      0      0
+fat08              ok              -     16      0      0      0      0      0
+fat09              ok              -     16      0      0      0      0      0
+fat10              ok              -     16      0      0      0      0      0
+......</pre>
+== 查看LSF队列<code>bqueues</code> ==
+
+查看所有队列的整体信息：
+
+<pre># bqueues
+QUEUE_NAME      PRIO STATUS          MAX JL/U JL/P JL/H NJOBS  PEND   RUN  SUSP
+cpu              40  Open:Active       -    -    -    -  2072     0  2072     0
+fat              40  Open:Active       -    -    -    -     0     0     0     0
+gpu              40  Open:Active       -    -    -    -   288     0   288     0
+mic              40  Open:Active       -    -    -    -     0     0     0     0
+cpu-fat          40  Open:Active       -    -    -    -    16     0    16     0</pre>
+查看某个队列的信息：
+
+<pre># bqueues fat
+QUEUE_NAME      PRIO STATUS          MAX JL/U JL/P JL/H NJOBS  PEND   RUN  SUSP
+fat              40  Open:Active       -    -    -    -     0     0     0     0</pre>
+== 查看计算节点负载<code>lsload</code> ==
+
+查看整体负载：
+
+<pre># lsload
+HOST_NAME       status  r15s   r1m  r15m   ut    pg  ls    it   tmp   swp   mem
+node011             ok   0.0   0.3   0.4   0%   0.0   0 49024  193G   62G   61G
+node039             ok   0.0   0.6   0.5   0%   0.0   0 49024  194G   62G   61G
+node041             ok   0.0   0.0   0.0   0%   0.0   0 49024  194G   62G   61G
+node050             ok   0.0   0.0   0.0   0%   0.0   0 49024  194G   62G   60G
+node064             ok   0.0   0.7   0.6   0%   0.0   0 49024  194G   62G   61G
+node077             ok   0.0   0.7   0.5   0%   0.0   0 49024  194G   62G   61G
+.....</pre>
+查看某个节点的负载：
+
+<pre>lsload node001
+HOST_NAME       status  r15s   r1m  r15m   ut    pg  ls    it   tmp   swp   mem
+node001             ok   0.3   0.1   0.1   1%   0.0   0   332  152G   62G   61G</pre>
+= 使用LSF提交作业<code>bsub</code> =
+
+<!--
+设置环境变量
+------
 
 您使用LSF，应设置相应的环境变量：
 
 Csh用户，登录系统后执行
 
-<pre>source /export/lsf/cshrc.lsf</pre>
+    source /export/lsf/cshrc.lsf
+
 Bash用户，登录系统后执行
 
-<pre>./export/lsf/conf/profile.lsf</pre>
+    ./export/lsf/conf/profile.lsf
+
 您也可以将其写入.cshrc或.bashrc文件，则登录后就自动设置了相应的环境变量。
+-->
 
-== 提交作业 ==
+== 手动提交作业 ==
 
-LSF使用bsub提交作业。
-
-bsub命令的常见用法：
+LSF使用bsub提交作业。bsub命令的格式是：
 
 <pre>bsub -n Z -q QUEUENAME -i INPUTFILE -o OUTPUTFILE COMMAND</pre>
-其中：Z代表了提交作业需要的cpu数目，-q指定作业提交的队列。如果不添加-q选项，系统将把作业提交到默认的作业队列。INPUTFILE代表程序需要读入的文件名，OUTPUTFILE代表一个文件，作业提交后的标准输出信息将会保存在OUTPUTFILE这个文件中。
+其中：<code>Z</code>提交作业需要的线程数，<code>-q</code>指定作业提交的队列。如果不添加<code>-q</code>选项，系统将把作业提交到默认的作业队列。 <code>INPUTFILE</code>表示程序需要读入的文件名，<code>OUTPUTFILE</code>表示输出文件名，作业提交后的输出到标准输出信息将会保存在这个文件中。
 
-对于串行程序，COMMAND可以直接使用您的程序名
+对于串行作业，<code>COMMAND</code>可以直接使用您的程序名。 例如，将串行程序<code>mytest</code>的通过LSF提交：
 
-例如，对一个12小时内完成的串行作业mytest的提交方式为：
+<pre>bsub -n 1 -q q_default -o mytest.out ./mytest</pre>
+对于MPI并行作业，<code>COMMAND</code>的格式为<code>-a mpich_gm mpirun.lsf PROG_NAME</code>。 例如，将并行程序<code>mytest</code>，通过LSF提交，使用16个线程运行这个作业：
 
-<pre>bsub -n 1 -q QN_Norm -o mytest.out ./mytest</pre>
-对于并行作业，COMMAND的格式为“<code>-a mpich_gm mpirun.lsf 程序名</code>”
+<pre>bsub -n 16 -q q_default -o mytest.out -a mpich_gm mpirun.lsf ./mytest</pre>
+== 交互式批量提交 ==
 
-例如，对一个12小时内完成的，且使用16个CPU的并行作业mytest，其提交方式为：
+使用<code>bsub</code>还可以启动一个交互式的shell环境，一次提交多个运行参数相同的并行作业。例如下面的操作：
 
-<pre>bsub -n 16 -q QN_Norm -o mytest.out -a mpich_gm mpirun.lsf ./mytest</pre>
-== 使用脚本提交作业 ==
+<pre># bsub
+bsub&gt; -n 16
+bsub&gt; -q q_default
+bsub&gt; -o output.txt
+bsub&gt; COMMAND1
+bsub&gt; COMMAND2
+bsub&gt; COMMAND3</pre>
+等价于：
 
-bsub命令可以使用输入脚本多次提交具有相同参数的作业，其格式为：
-
-<pre>#BSUB -n Z
-#BSUB -q QUEUENAME
-#BSUB -o OUTPUTFILE
-COMMAND</pre>
-该脚本的参数与命令行“<code>bsub -n Z -q QUEUENAME -o OUTPUTFILE COMMAND</code>”相同，提交的方法为“<code>bsub&lt;脚本名</code>”。
-
-例如要提交一个12小时内完成，且需要16个CPU的并行作业mytest，可以编写脚本bsub.scriptfile:
+<pre>bsub -n 16 -q q_default -o output.txt COMMAND1
+bsub -n 16 -q q_default -o output.txt COMMAND2
+bsub -n 16 -q q_default -o output.txt COMMAND3</pre>
+== 编写bsub脚本提交作业 ==
 
 <pre>#BSUB -n 16
-#BSUB -q QN_Norm
-#BSUB -o mytest.out
+#BSUB -q q_default
+#BSUB -o output.txt
 -a mpich_gm mpirun.lsf ./mytest</pre>
-作业的提交方法为：<code>bsub&lt;bsub.scriptfile</code>
+<code>bsub</code>还接受来自标准输入的作业说明。 因此，我们可以编写LSF脚本提交作业。 bsub脚本简单易写，上面一段代码是名为<code>bsub.script</code>的完整例子，将<code>bsub.script</code>通过输入重定向，提交给LSF：
 
-= 作业查看与删除 =
+<pre>bsub &lt; bsub.script  </pre>
+这等价于：
 
-几个常用的命令:
+<pre>busb -n 16 -q q_default -o output.txt -a mpich_gm mpirun.lsf ./mytest</pre>
+= 其他作业管理操作 =
 
-* <code>bjobs          检查提交作业的状态</code>
-* <code>bjobs -w       以宽格式来显示作业的信息</code>
-* <code>bjobs -r       显示正在运行的作业</code>
-* <code>bjobs -a       显示所有的作业</code>
-* <code>bjobs -p       显示等待运行的作业和等待的原因</code>
-* <code>bjobs -s       显示正在挂起的作业和挂起的原因</code>
-* <code>bjobs -l       显示该作业的所有信息</code>
-* <code>bhist          显示作业的历史情况</code>
-* <code>bhist &lt;jobid&gt;  显示指定作业的历史情况</code>
-* <code>bkill          删除不需要的作业</code>
-* <code>bkill &lt;jobid&gt;  删除指定的作业</code>
-* <code>bkill -r &lt;jobid&gt;</code>
-* <code>bpeek          当作也正在运行时，显示它的标准输出，监视作业运行</code>
-* <code>bpeek &lt;jobid&gt;  查看指定作业的标准输出</code>
-* <code>bqueues        显示队列信息</code>
-* <code>bqueues -l &lt;queue name&gt;</code>
-* <code>lsload         显示各节点的负载信息</code>
-* <code>lsload &lt;hostname&gt;</code>
+== 查看作业状态<code>bjobs</code> ==
+
+检查已提交的作业的运行状态：
+
+<pre>bjobs</pre>
+以宽格式来显示作业运行状态：
+
+<pre>bjobs -w</pre>
+显示所有作业：
+
+<pre>bjobs -a</pre>
+显示正在运行的作业：
+
+<pre>bjobs -r</pre>
+显示等待运行(pending)的作业和等待的原因：
+
+<pre>bjobs -p</pre>
+显示已经挂起(suspending)的作业和挂起的原因：
+
+<pre>bjobs -s</pre>
+显示<code>JOBID</code>这个作业的所有信息：
+
+<pre>bjobs -l JOBID</pre>
+== 终止作业<code>bkill</code> ==
+
+终止不需要的作业：
+
+<pre>bkill</pre>
+终止<code>JOBID</code>这个作业：
+
+<pre>bkill JOBID</pre>
+直接将作业<code>JOBID</code>从LSF中移除，而不等待该作业的进程在操作系统中终结：
+
+<pre>bikill JOBID</pre>
+== 监视作业输出<code>bpeek</code> ==
+
+当作也正在运行时，显示它的标准输出，监视作业运行：
+
+<pre>bpeek</pre>
+查看<code>JOBID</code>的标准输出：
+
+<pre>bpeek JOBID</pre>
+== 作业历史信息<code>bhist</code> ==
+
+显示作业的历史情况：
+
+<pre>bhist</pre>
+显示<code>JOBID</code>作业的历史情况：
+
+<pre>bhist JOBID</pre>
+= 参考资料 =
