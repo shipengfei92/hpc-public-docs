@@ -1,5 +1,6 @@
 = 参考资料 =
 
+* “PPTP v.s. L2TP v.s. OpenVPN” https://www.ivpn.net/knowledgebase/62/PPTP-vs-L2TP-vs-OpenVPN.html
 * “测绘学院网络与数据处理中心OpenVPN使用指南” http://hx.linuxadmin.cn/?m=201210
 * “Tunnelblick OpenVPN Setup Instructions for VyprVPN” http://www.giganews.com/support/vyprvpn/vpn-setup/mac/tunnelblick/openvpn.html
 * “Linux (Ubuntu) OpenVPN Manual Setup Instructions” http://www.giganews.com/support/vyprvpn/vpn-setup/linux/openvpn.html
