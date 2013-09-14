@@ -1,0 +1,12 @@
+% 使用OpenVPN接入高性能计算中心网络
+% 上海交通大学高性能计算中心\
+<http://hpc.sjtu.edu.cn>
+% 2013年8月18日 更新
+
+
+参考资料
+======
+
+* "测绘学院网络与数据处理中心OpenVPN使用指南" http://hx.linuxadmin.cn/?m=201210
+* "Tunnelblick OpenVPN Setup Instructions for VyprVPN" http://www.giganews.com/support/vyprvpn/vpn-setup/mac/tunnelblick/openvpn.html
+* "Linux (Ubuntu) OpenVPN Manual Setup Instructions" http://www.giganews.com/support/vyprvpn/vpn-setup/linux/openvpn.html

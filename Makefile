@@ -4,6 +4,8 @@ SED = gsed
 
 man_SSH  := ssh
 man_LSF  := lsf
+man_VPN  := vpn
+# Document Class
 DOCCLASS := hpcmanual
 # LATEX_OPT = -xelatex -silent -f
 LATEX_OPT = -gg -xelatex -f
@@ -20,7 +22,6 @@ VERSION = 0.5.3
 .PHONY : all clean version distclean release
 .PRECIOUS : %.tex
 
-all: $(man_SSH).pdf $(man_SSH).wiki $(man_LSF).pdf $(man_LSF).wiki
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
 	-@latexmk $(LATEX_OPT) $*
