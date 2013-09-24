@@ -1,0 +1,72 @@
+% 使用Environment Module设置应用环境
+% 上海交通大学高性能计算中心\
+<http://hpc.sjtu.edu.cn>
+% 2013年9月24日 更新
+
+基本信息
+======
+
+* 系统module所在位置：```/lustre/utility/modulefiles```
+* 全局导入方法：在```/etc/profile```末尾添加：
+		export MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+
+命令
+======
+
+查看module命令列表：
+
+	$ module
+
+查看可用模块：
+
+	$ module avail
+
+查看已经加载的模块：
+
+	$ module list
+
+加载某模块：
+
+	$ module load MODULE_NAME
+
+卸载模块：
+
+	$ module unload MODULE_NAME
+
+
+模块内容
+======
+
+intel-compiler
+------
+
+	#%Module 1.0
+	prepend-path PATH /lustre/utility/intel/composerxe/bin/intel64
+	prepend-path PATH /lustre/utility/intel/impi/4.1.1.036/intel64/bin
+	prepend-path MANPATH /lustre/utility/intel/composerxe/man/en_US
+	prepend-path LD_LIBRARY_PATH /lustre/utility/intel/mkl/lib/intel64
+
+intel-mpi
+------
+
+	To be determined.
+	
+mpich
+------
+
+	To be determined.
+
+fftw-impi-3.3.3
+------
+
+	prepend-path	LD_LIBRARY_PATH	/lustre/software/fftw3/fftw-3.3.3_impi/FLOAT/lib
+
+cuda-5.0
+------
+
+	prepend PATH /lustre/utility/cuda-5.0/bin
+
+参考资料
+=====
+* "Environment Module" http://modules.sourceforge.net/ 
+

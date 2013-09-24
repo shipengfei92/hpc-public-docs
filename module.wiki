@@ -1,0 +1,46 @@
+= 基本信息 =
+
+* 系统module所在位置：<code>/lustre/utility/modulefiles</code>
+* 全局导入方法：在<code>/etc/profile</code>末尾添加： MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+
+= 命令 =
+
+查看module命令列表：
+
+<pre>$ module</pre>
+查看可用模块：
+
+<pre>$ module avail</pre>
+查看已经加载的模块：
+
+<pre>$ module list</pre>
+加载某模块：
+
+<pre>$ module load MODULE_NAME</pre>
+卸载模块：
+
+<pre>$ module unload MODULE_NAME</pre>
+= 模块内容 =
+
+== intel-compiler ==
+
+<pre>#%Module 1.0
+prepend-path PATH /lustre/utility/intel/composerxe/bin/intel64
+prepend-path PATH /lustre/utility/intel/impi/4.1.1.036/intel64/bin
+prepend-path MANPATH /lustre/utility/intel/composerxe/man/en_US
+prepend-path LD_LIBRARY_PATH /lustre/utility/intel/mkl/lib/intel64</pre>
+== intel-mpi ==
+
+<pre>To be determined.</pre>
+== mpich ==
+
+<pre>To be determined.</pre>
+== fftw-impi-3.3.3 ==
+
+<pre>prepend-path    LD_LIBRARY_PATH /lustre/software/fftw3/fftw-3.3.3_impi/FLOAT/lib</pre>
+== cuda-5.0 ==
+
+<pre>prepend PATH /lustre/utility/cuda-5.0/bin</pre>
+= 参考资料 =
+
+* “Environment Module” http://modules.sourceforge.net/
