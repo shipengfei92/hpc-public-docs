@@ -23,9 +23,9 @@ Then source it.
 Now, to compile a program you need to know the location of the libraries and include directories:
 
 * impi : /lustre/utility/intel/impi/4.1.1.036/intel64/
-** bin : mpiicc, mpiifort,mpicpc, mpirun
-** include
-** lib : libmpi.so
+* bin : mpiicc, mpiifort,mpicpc, mpirun
+* include
+* lib : libmpi.so
 * mkl : lustre/utility/intel/mkl/lib/intel64/
 
 Typically, to use mkl you will need to set the following variables:
