@@ -50,7 +50,7 @@ node077             ok   0.0   0.7   0.5   0%   0.0   0 49024  194G   62G   61G
 .....</pre>
 查看某个节点的负载：
 
-<pre>lsload node001
+<pre># lsload node001
 HOST_NAME       status  r15s   r1m  r15m   ut    pg  ls    it   tmp   swp   mem
 node001             ok   0.3   0.1   0.1   1%   0.0   0   332  152G   62G   61G</pre>
 = 使用LSF提交作业<code>bsub</code> =
@@ -112,7 +112,7 @@ bsub -n 16 -q q_default -o output.txt COMMAND3</pre>
 <pre>bsub &lt; bsub.script  </pre>
 这等价于：
 
-<pre>busb -n 16 -q q_default -o output.txt -a mpich_gm mpirun.lsf ./mytest</pre>
+<pre>bsub -n 16 -q q_default -o output.txt -a mpich_gm mpirun.lsf ./mytest</pre>
 = 其他作业管理操作 =
 
 == 查看作业状态<code>bjobs</code> ==
@@ -151,7 +151,7 @@ bsub -n 16 -q q_default -o output.txt COMMAND3</pre>
 <pre>bikill JOBID</pre>
 == 监视作业输出<code>bpeek</code> ==
 
-当作也正在运行时，显示它的标准输出，监视作业运行：
+当作业正在运行时，显示它的标准输出，监视作业运行：
 
 <pre>bpeek</pre>
 查看<code>JOBID</code>的标准输出：

@@ -170,11 +170,11 @@ Mac系统可以自动记住这个口令，使用很方便；Linux/UNIX用户可�
 
 		$ ping 202.120.58.229
 
-2. 通过```telnet```检查本地主机能否与登录节点的SSH端口建立TCP连接：
+3. 通过```telnet```检查本地主机能否与登录节点的SSH端口建立TCP连接：
 		
 		$ telnet 202.120.58.229 22
 
-3. 查看详细的SSH连接信息：
+4. 查看详细的SSH连接信息：
 
 		$ ssh -v YOUR_USERNAME@202.120.58.229
 
@@ -187,4 +187,4 @@ Mac系统可以自动记住这个口令，使用很方便；Linux/UNIX用户可�
 * "鸟哥的Linux私房菜：SSH服务器" <http://vbird.dic.ksu.edu.tw/linux_server/0310telnetssh.php#ssh_server>
 * "Simplify Your Life With an SSH Config File" <http://nerderati.com/2011/03/simplify-your-life-with-an-ssh-config-file/>
 * "keychain: Set Up Secure Passwordless SSH Access For Backup Scripts" <http://www.cyberciti.biz/faq/ssh-passwordless-login-with-keychain-for-scripts/>
-* "使用putty密码远程登录OpenSSH" http://www.linuxfly.org/post/175/
+* "使用putty密码远程登录OpenSSH" <http://www.linuxfly.org/post/175/>

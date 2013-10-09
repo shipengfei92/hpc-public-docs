@@ -3,7 +3,9 @@
 SED = gsed
 
 man_SSH  := ssh
+man_SSH_EN	:= ssh_en
 man_LSF  := lsf
+man_LSF_EN	:= lsf_en
 man_VPN  := vpn
 man_module  := module
 man_compile := compile
@@ -24,7 +26,7 @@ VERSION = 0.5.3
 .PHONY : all clean version distclean release
 .PRECIOUS : %.tex
 
-all: $(man_SSH).pdf $(man_SSH).wiki $(man_LSF).pdf $(man_LSF).wiki $(man_module).pdf $(man_module).wiki $(man_compile).pdf $(man_compile).wiki
+all: $(man_SSH).pdf $(man_SSH).wiki $(man_SSH_EN).pdf $(man_SSH_EN).wiki $(man_LSF).pdf $(man_LSF).wiki $(man_LSF_EN).pdf $(man_LSF_EN).wiki $(man_module).pdf $(man_module).wiki $(man_compile).pdf $(man_compile).wiki
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
 	-@latexmk $(LATEX_OPT) $*

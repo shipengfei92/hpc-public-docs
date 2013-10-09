@@ -1,0 +1,155 @@
+This document will introduce how to remotely login to the HPC cluster at SJTU via SSH. Before reading this document, you need to have a good understanding of “Linux/Unix”, “Terminal”, “MS-DOS” and “SSH remote login”. Or, you can read the References for more information about these concepts.
+
+This document contains:
+
+* The NOTES of using SSH to log in the cluster;
+* The preparation of first login such as information collection, client downloading, SSH login, SSH file transfers and password-less login, etc;
+* The troubleshooting and feedback.
+
+Follwing the document’s operation and feedback’s methods will help you complete the job successfully. It will be very kind to provide advices, thank you!
+
+= Notices =
+
+* The SSH accounts login to the cluster are only available for applicants and their colleagues in the same lab, you cannot lend the accounts to others.
+* Please keep your SSH account and password carefully and don’t share it with others. The staffs of HPCC won’t ask for your SSH password.
+* Malicious SSH clients, especially some “sinicizing client”, may steal your SSH password<ref>Report about Chinese version Putty backdoor incident, please refer to http://www.cnbeta.com/articles/171116.htm</ref>, please use the English version SSH software recommended by [[#client-downloading|Client Downloading]].
+* Please don’t jump to log in other nodes after you log in the HPC cluster. Shut down the SSH session when you finished your job.
+* If you type the wrong password repeatedly, or use the ip address not in the “white list”, you may not log in successfully. Please refer to [The troubleshooting and feedback], and send the diagnostic message to the administrator[mailto:weijianwen@sjtu.edu.cn weijianwen@sjtu.edu.cn].
+
+= Preparation =
+
+== Information Collection ==
+
+When you log in the cluster via SSH, you need to fill in the server’s ip address(or hostname), SSH port, SSH username and SSh password in the client. After the administrator allocate the account for you, we will send an email to inform you, please check it to get the informatin. The email will be like this:
+
+<pre>SSH login node: 202.120.58.229
+SSH Port: 22
+Username: YOUR_USERNAME
+Password: YOUR_PASSWORD
+Home: /lustre/home/YOUR_HOME</pre>
+The detail is:
+
+* SSH username: <code>YOUR\_USERNAME</code>
+* SSH password: <code>YOUR\_PASSWORD</code>
+* SSH login node’s IP address: <code>202.120.58.229</code>
+* SSH port: <code>22</code>
+* user’s home folder: <code>/lustre/home/YOUR_HOME</code>
+
+''Note: To facilitate the narrative, the left content will follow the information above. In the actual operation, please refer to your email recieved and take care of your login information.''
+
+== Client Downloading ==
+
+=== Windows ===
+
+Windows user can use <code>putty</code>. It is a free and healty SSH client, you can run it by double clicking after downloading. <code>putty</code> can be downloaded from its homepage http://www.putty.org/.
+
+=== Linux/Unix/Mac ===
+
+*Nix opration system like Linux/Unix/Mac has its own SSH client including <code>ssh</code>, <code>scp</code>, <code>sftp</code>, etc. There is no need to install another software.
+
+= Log in the Cluster via SSH =
+
+== Windows User ==
+
+After starting up Putty, please fill in the SSH login node’s IP address(<code>IP address</code>), SSH port(<code>port</code>), then press <code>Open</code>, as Figure 1.
+
+[[Image:putty1.png|frame|none|alt=|caption Fill in the SSH address and port]]
+
+In the terminal window, type in your SSH username and password to log in, as Figure 2.
+
+''Note: when you are typing in the password, there is no <code>*</code> character to echo, please do it as usual and press ‘enter’ to log in.''
+
+[[Image:putty2.png|frame|none|alt=|caption Type in the username and password in putty terminal window]]
+
+== Linux/Unix/Mac User ==
+
+Linux/Unix/Mac user can use the command line tools in terminal to log in. The instruction below figures out the node’s IP address, username and SSH port.
+
+<pre>$ ssh -p 22 YOUR_USERNAME@202.120.58.229</pre>
+= Transfer the Files via SSH =
+
+== Windows User ==
+
+Windows user can use WinSCP to transfer files between the cluster and your own computer. As the figure below, fill in the node’s address(<code>Host name</code>), SSH port(<code>Port number</code>), SSH username(<code>User name</code>), SSH password(<code>Password</code>), then press <code>Login</code> to connect. The method of using WinSCP is like using FTP client GUI, as Figure 4.
+
+[[Image:winscp.png|frame|none|alt=|caption Fill in the SSH connection argument in WinSCP]]
+
+[[Image:winscp2.png|frame|none|alt=|caption The operation interface of WinSCP]]
+
+
+
+== Linux/Unix/Mac User ==
+
+*NIX user can use the command line tools to transfer the data between the cluster and your own computer. The instruction below will upload the folder <code>data/</code> to the home folder’s <code>tmp/</code>.
+
+<pre>$ scp -P 22 -r data/ YOUR_USERNAME@202.120.58.229:tmp/</pre>
+The instruction below will download the home folder’s <code>data.out</code> to the local present working directory.
+
+<pre>$ scp -P 22 YOUR_USERNAME@202.120.58.229:data.out ./</pre>
+If you want to finish more complicated data transfer operation, you can use <code>sftp</code>. It just looks like FTP command line client.
+
+<pre>$ sftp -P 22 YOUR_USERNAME@202.120.58.229
+Connected to 202.120.58.229
+sftp&gt; ls </pre>
+= Password-less Login =
+
+''Note: “Password-less login” is only available to Linux/UNIX/Mac user who uses SSH command line tools. ''
+
+“Password-less login” lets you log in without type in the username and password, it can also make an alias of server to simplify the instruction. Password-less login need to establish the SSH trust relationship from the '''remote host'''(the cluster’s login nodes) to the '''local host'''(your own computer). After the trust relationship is established, both sides will authenticate by SSH key-pair. For more information about SSH key-pair, please refer to [#Reference].
+
+First, you need to generate your local-host’s SSH key-pair. You can choose if using passphrases to protect the key-pair(suggest to choose “yes” and don’t make the SSH password to be the passphrases). If you choose to use passphrases to protect the key-pair, you need to type the passphrases every time both sides authenticate. Mac operating system can remenber the passphrases automatically; Linux/UNIX user can use [https://wiki.gentoo.org/wiki/Keychain keychain] to help manage the SSH password.
+
+<pre>$ ssh-keygen -t rsa</pre>
+<code>ssh-keygen</code> will generate a key-pair in <code>~/.ssh/</code>, <code>id_rsa</code> is the private key needed to be kept and <code>id_rsa.pub</code> is the public key which can be sent as your identity.
+
+Then, use <code>ssh-copy-id</code> to add the local-host’s public key <code>id_rsa.pub</code> to the remote-host’s trust-list. In fact, what <code>ssh-copy-id</code> does is to add the <code>id_rsa.pub</code>’s content to the remote-host’s file <code>~/.ssh/authorized_keys</code>.
+
+<pre>$ ssh-copy-id -p 22 YOUR_USERNAME@202.120.58.229</pre>
+We can also write the connection arguments into <code>~/.ssh/config</code> to make it conciser and secreter. Newly-built or edit the file <code>~/.ssh/config</code>:
+
+<pre>$ EDIT ~/.ssh/config</pre>
+Append the below content. <code>Host</code> assign the remote host’s alias, <code>HostName</code> is the true domain name or IP address of remote host, <code>Port</code> assign the SSH port, <code>User</code> assign SSH username.
+
+<pre>Host hpc
+HostName 202.120.58.229
+Port 22
+User YOUR_USERNAME</pre>
+You need to make sure the authority of this file is right:
+
+<pre>$ chmod 600 ~/.ssh/config</pre>
+Then, you can log in the HPC cluster by just typing:
+
+<pre>$ ssh hpc</pre>
+= Change the Login Password =
+
+After login to the cluster, you can use <code>yppasswd</code> to change your SSH password.
+
+''Note: Please don’t use <code>passwd</code> to change the password, it doesn’t work.''
+
+<pre>$ yppasswd</pre>
+Or, you can contact with the [mailto:weijianwen@sjtu.edu.cn administrator].
+
+= Troubleshooting and Feedback =
+
+There are many reason that may make you cannot log in the HPC cluster, you can check yourself by the following methods.
+
+<ol style="list-style-type: decimal;">
+<li>Visit http://vpn.hpc.sjtu.edu.cn to check your outer net IP address.</li>
+<li><p>Use <code>ping</code> to check if the network connection between your local-host and cluster’s node is normal:</p>
+<p>$ ping 202.120.58.229</p></li>
+<li><p>Use <code>telnet</code> to check if your local-host can build TCP connection with the SSH port of cluster’s node:</p>
+<p>$ telnet 202.120.58.229 22</p></li>
+<li><p>Check the details of SSH connecting information:</p>
+<p>$ ssh -v YOUR_USERNAME@202.120.58.229</p></li></ol>
+
+If the methods above cannot help you to solve the problems, please contact with the [[weijianwen@sjtu.edu.cn|administrator]], and append your self-check result to the email. ''Suggest you directly copy the result of self-check as text and don’t take the screenshot''
+
+= References =
+
+* “UNIX Tutorial for Beginners” http://www.ee.surrey.ac.uk/Teaching/Unix/
+* “Vbird’s Linux Private Kitchen : SSH server” http://vbird.dic.ksu.edu.tw/linux_server/0310telnetssh.php#ssh_server
+* “Simplify Your Life With an SSH Config File” http://nerderati.com/2011/03/simplify-your-life-with-an-ssh-config-file/
+* “keychain: Set Up Secure Passwordless SSH Access For Backup Scripts” http://www.cyberciti.biz/faq/ssh-passwordless-login-with-keychain-for-scripts/
+* “Use Putty Password to Rmote Login to OpenSSH” http://www.linuxfly.org/post/175/
+
+<references />
