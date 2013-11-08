@@ -125,7 +125,7 @@ LSF使用bsub提交作业。bsub命令的格式是：
 	bsub -n 16 -q q_default -o output.txt COMMAND2
 	bsub -n 16 -q q_default -o output.txt COMMAND3
 
-编写bsub脚本提交作业
+编写LSF作业控制脚本
 ------
 	#BSUB -n 16
 	#BSUB -q q_default
@@ -141,6 +141,32 @@ bsub脚本简单易写，上面一段代码是名为```bsub.script```的完整�
 这等价于：
 
 	bsub -n 16 -q q_default -o output.txt -a mpich_gm mpirun.lsf ./mytest
+
+一个功能更完整的LSF作业控制脚本
+------
+
+	#BSUB -J HELLO_MPI
+	#BSUB -o job.out
+	#BSUB -e job.err
+	#BSUB -n 256
+	source /lustre/utility/intel/composer_xe_2014.3.163/bin/compilervars.sh intel64
+	source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
+	source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
+	MPIRUN=`which mpirun`
+	EXE="./mpihello"
+	CURDIR=$PWD
+	cd $CURDIR
+	rm -f nodelist nodes >& /dev/null
+	touch nodelist
+	touch nodes
+	NP=0
+	for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
+	do
+	echo $host >> nodelist
+	echo $host | cut -d ":" -f1 >> nodes
+	nn=`echo $host | cut -d ":" -f2`
+	NP=`echo $NP+$nn | bc`
+	done
 
 其他作业管理操作
 ======
