@@ -1,0 +1,141 @@
+= OpenMP示例 =
+
+= MPI示例 =
+
+这部分演示如何使用Intel编译器编译一个名为<code>mpihello</code>的MPI程序，然后在本地测试运行，最后向LSF作业管理系统提交正式作业。 使用Environment Module可以简化环境参数设定，我们也会给出使用module的过程。
+
+== 编译源代码 ==
+
+<code>mpihello</code>程序的源文件为<code>mpihello.c</code>，内容如下：
+
+<pre>include &lt;mpi.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;netdb.h&gt;
+
+#define MAX_HOSTNAME_LENGTH 256
+
+int main(int argc, char *argv[])
+{
+    int pid;
+    char hostname[MAX_HOSTNAME_LENGTH];
+
+    int numprocs;
+    int rank;
+
+    int rc;
+
+    /* Initialize MPI. Pass reference to the command line to
+     * allow MPI to take any arguments it needs
+     */
+    rc = MPI_Init(&amp;argc, &amp;argv);
+
+    /* It's always good to check the return values on MPI calls */
+    if (rc != MPI_SUCCESS)
+    {
+        fprintf(stderr, &quot;MPI_Init failed\n&quot;);
+        return 1;
+    }
+
+    /* Get the number of processes and the rank of this process */
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+
+    /* let's see who we are to the &quot;outside world&quot; - what host and what PID */
+    gethostname(hostname, MAX_HOSTNAME_LENGTH);
+    pid = getpid();
+
+    /* say who we are */
+    printf(&quot;Rank %d of %d has pid %5d on %s\n&quot;, rank, numprocs, pid, hostname);
+    fflush(stdout);
+
+    /* allow MPI to clean up after itself */
+    MPI_Finalize();
+    return 0;
+}</pre>
+我们使用Intel MPI并行开发环境提供的<code>mpiicc</code>对其编译, <code>mpiicc</code>会自动调用后端编译器<code>icc</code>。 使用icc前需要运行脚本使环境变量生效。
+
+<pre>$ source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
+$ source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
+$ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
+$ mpicc -o mpihello mpihello.c</pre>
+== 使用<code>mpirun</code>在本地测试运行 ==
+
+<code>mpirun</code>用于启动MPI并行程序。 下面的命令启动<code>mpihello</code>并行程序，分配4个线程。 ''注意：在<math>\pi</math>集群中，<code>mpirun</code>只能用作小于4线程的测试，大规模正式作业必须提交到LSF。''
+
+<pre>$ mpirun -np 4 ./mpihello
+Rank 0 of 4 has pid 90037 on mu05
+Rank 1 of 4 has pid 90038 on mu05
+Rank 2 of 4 has pid 90039 on mu05
+Rank 3 of 4 has pid 90040 on mu05</pre>
+== 提交到LSF作业管理系统 ==
+
+大规模正式作业必须提交到LSF作业管理系统。<br />作业控制脚本<code>mpihello.lsf</code>内容如下：
+
+<pre>#BSUB -J HELLO_MPI
+#BSUB -L /bin/bash
+#BSUB -o job.out
+#BSUB -e job.err
+#BSUB -n 256
+        
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module unload icc/13.1.1
+module load impi/4.1.1.036
+
+MPIRUN=`which mpirun`
+EXE=&quot;./mpihello&quot;
+
+CURDIR=$PWD
+cd $CURDIR
+rm -f nodelist nodes &gt;&amp; /dev/null
+touch nodelist
+touch nodes
+NP=0
+
+for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
+do
+echo $host &gt;&gt; nodelist
+echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
+nn=`echo $host | cut -d &quot;:&quot; -f2`
+NP=`echo $NP+$nn | bc`
+done</pre>
+将作业提交到名为<code>cpu</code>的队列上：
+
+<pre>$ bsub -q cpu &lt; mpihello.lsf</pre>
+作业运行结束后，查看当前目录下的输出结果。
+
+== 使用module ==
+
+<pre>#BSUB -J HELLO_MPI
+#BSUB -L /bin/bash
+#BSUB -o job.out
+#BSUB -e job.err
+#BSUB -n 256
+        
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module unload icc/13.1.1
+module load impi/4.1.1.036
+
+MPIRUN=`which mpirun`
+EXE=&quot;./mpihello&quot;
+
+CURDIR=$PWD
+cd $CURDIR
+rm -f nodelist nodes &gt;&amp; /dev/null
+touch nodelist
+touch nodes
+NP=0
+
+for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
+do
+echo $host &gt;&gt; nodelist
+echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
+nn=`echo $host | cut -d &quot;:&quot; -f2`
+NP=`echo $NP+$nn | bc`
+done</pre>
+= CUDA示例 =
+
+= 参考资料 =
+
+* “LLNL Tutorials: Message Passing Interface (MPI)” https://computing.llnl.gov/tutorials/mpi/
+* “mpihello”
