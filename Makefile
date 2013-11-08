@@ -1,14 +1,11 @@
-# Makefile for HPC manual file
-
-SED = gsed
-
-man_SSH  := ssh
+man_SSH  	:= ssh
 man_SSH_EN	:= ssh_en
-man_LSF  := lsf
+man_LSF  	:= lsf
 man_LSF_EN	:= lsf_en
-man_VPN  := vpn
-man_module  := module
-man_compile := compile
+man_VPN  	:= vpn
+man_VPN_EN  	:= vpn_en
+man_module  	:= module
+man_module  	:= module_en
 # Document Class
 DOCCLASS := hpcmanual
 # LATEX_OPT = -xelatex -silent -f
@@ -26,7 +23,7 @@ VERSION = 0.5.3
 .PHONY : all clean version distclean release
 .PRECIOUS : %.tex
 
-all: $(man_SSH).pdf $(man_SSH).wiki $(man_SSH_EN).pdf $(man_SSH_EN).wiki $(man_LSF).pdf $(man_LSF).wiki $(man_LSF_EN).pdf $(man_LSF_EN).wiki $(man_module).pdf $(man_module).wiki $(man_compile).pdf $(man_compile).wiki
+all: $(man_SSH).pdf $(man_SSH).wiki $(man_SSH_EN).pdf $(man_SSH_EN).wiki $(man_LSF).pdf $(man_LSF).wiki $(man_LSF_EN).pdf $(man_LSF_EN).wiki $(man_module).pdf $(man_module).wiki 
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
 	-@latexmk $(LATEX_OPT) $*
@@ -42,7 +39,7 @@ $(DOCCLASS).% :
 
 clean :
 	-@latexmk -f -c $(man_SSH)
-	-@rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out *.cfg *.cls *.latex
+	-@rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out *.cfg *.cls *.latex *.log
 
 update :
 	@wget -q $(REPOURL)/$(DOCCLASS).cls -O pandoc/$(DOCCLASS).cls
