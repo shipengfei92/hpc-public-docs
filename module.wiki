@@ -1,87 +1,230 @@
-= 基本信息 =
+“Environment module”(环境模块)是一组环境变量设置的集合。 module可以被加载(<code>load</code>)、卸载(<code>unload</code>)、切换(<code>switch</code>)，这些操作会改变相应的环境变量设置，从而让用户方便地在不同环境间切换。 相比与将环境变量设置写入<code>/etc/profile</code>或者<code>~/.bashrc</code>，Environment module操作只影响当前用户的当前登录环境，不会因错误配置造成全局持续的破坏。 普通用户也可以自己编写module，具有很好的定制性。
 
-* 系统module所在位置：<code>/lustre/utility/modulefiles</code>
-* 全局导入方法：在<code>/etc/profile</code>末尾添加： export MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+= 基本命令 =
 
-= 命令 =
-
-查看module命令列表：
+== <code>module</code>命令列表 ==
 
 <pre>$ module</pre>
-查看可用模块：
+或者，
+
+<pre>$ module -h</pre>
+== 查看可用模块<code>avail</code> ==
 
 <pre>$ module avail</pre>
-查看已经加载的模块：
+== 查看已加载模块<code>list</code> ==
 
 <pre>$ module list</pre>
-加载某模块：
+== 加载模块<code>load</code> ==
 
 <pre>$ module load MODULE_NAME</pre>
-卸载模块：
+== 卸载模块<code>unload</code> ==
 
 <pre>$ module unload MODULE_NAME</pre>
-= 模块内容 =
+== 切换模块<code>switch</code> ==
 
-== intel-compiler ==
+<pre>$ module switch OLD_MODULE NEW_MODULE</pre>
+等价于：
 
-<pre>#%Module 1.0
-prepend-path PATH /lustre/utility/intel/composerxe/bin/intel64
-prepend-path PATH /lustre/utility/intel/impi/4.1.1.036/intel64/bin
-prepend-path MANPATH /lustre/utility/intel/composerxe/man/en_US
-prepend-path LD_LIBRARY_PATH /lustre/utility/intel/mkl/lib/intel64</pre>
-== intel-mpi ==
+<pre>$ module unload OLD_MODULE; module load NEW_MODULE</pre>
+== 卸载所有已加载的模块<code>purge</code> ==
 
-<pre>To be determined.</pre>
-== mpich2-1.4.1p1-gcc (TODO) ==
+<pre>$ module purge</pre>
+== 显示模块说明<code>whatis</code> ==
 
-<pre>#%Module 1.0
-#
-#  MPICH2 module for use with 'environment-modules' package:
-#
+<pre>$ module whatis MODULE_NAME</pre>
+== 显示该模块内容<code>display</code> ==
 
-# Define prefix so PATH and MANPATH can be updated.
-setenv        MPI_BIN       /usr/lib64/mpich2/bin
-setenv        MPI_SYSCONFIG /etc/mpich2-x86_64
-setenv        MPI_FORTRAN_MOD_DIR /usr/include/mpich2-x86_64
-setenv        MPI_INCLUDE   /usr/include/mpich2-x86_64
-setenv        MPI_LIB       /usr/lib64/mpich2/lib
-setenv        MPI_MAN       /usr/share/man/mpich2
-setenv        MPI_PYTHON_SITEARCH       /usr/lib64/mpich2/bin
-setenv        MPI_COMPILER  mpich2-x86_64
-setenv        MPI_SUFFIX    _mpich2
-setenv        MPI_HOME      /usr/lib64/mpich2
-prepend-path  PATH          /usr/lib64/mpich2/bin
-prepend-path  MANPATH       /usr/share/man/mpich2</pre>
-== mpich2-1.4.1p1-intel (TODO) ==
+<pre>$ module display MODULE_NAME</pre>
+= Pi集群module功能说明 =
 
-<pre>#%Module 1.0
-#
-#  MPICH2 module for use with 'environment-modules' package:
-#
+<math>\pi</math>集群预设了如下module:
 
-# Define prefix so PATH and MANPATH can be updated.
-setenv        MPI_BIN       /usr/lib64/mpich2/bin
-setenv        MPI_SYSCONFIG /etc/mpich2-x86_64
-setenv        MPI_FORTRAN_MOD_DIR /usr/include/mpich2-x86_64
-setenv        MPI_INCLUDE   /usr/include/mpich2-x86_64
-setenv        MPI_LIB       /usr/lib64/mpich2/lib
-setenv        MPI_MAN       /usr/share/man/mpich2
-setenv        MPI_PYTHON_SITEARCH       /usr/lib64/mpich2/bin
-setenv        MPI_COMPILER  mpich2-x86_64
-setenv        MPI_SUFFIX    _mpich2
-setenv        MPI_HOME      /usr/lib64/mpich2
-prepend-path  PATH          /usr/lib64/mpich2/bin
-prepend-path  MANPATH       /usr/share/man/mpich2</pre>
-== fftw-impi-3.3.3 (TODO) ==
+<pre>$ module avail 
+----------------- /lustre/utility/modulefiles ----------------
+compiler-default    mpi-default
+fftw/impi/3.3.3        fftw/openmpi/gcc/3.3.3 icc/13.1.1             
+cuda/5.0               fftw/mpich2/gcc/3.3.3  fftw/openmpi/icc/3.3.3 impi/4.1.1.036
+cuda-default           fftw/mpich2/icc/3.3.3  gcc/4.8.1              mkl/11.0.3    
+openmpi/gcc/1.6.4      mpich2/gcc/1.4.1p1     pgi/13.9
+openmpi/icc/1.6.4      mpich2/icc/1.4.1p1</pre>
+模块命名规则是：
 
-<pre>prepend-path    LD_LIBRARY_PATH /lustre/software/fftw3/fftw-3.3.3_impi/FLOAT/lib</pre>
-== openmpi-gcc (TODO) ==
+<pre>软件名/MPI库/编译器/版本</pre>
+其中“MPI库”和“编译器”是命名时的可选项。 譬如，<code>fftw/mpich2/gcc/3.3.3</code>模块表示版本号为3.3.3的FFTW库，这个库支持在MPICH2上并行执行，FFTW和MPICH2库都使用GCC生成。 又如，<code>openmpi/gcc/1.6.4</code>模块表示版本号为1.6.4的OpenMPI库，这个库使用GCC生成。
 
-== openmpi-intel (TODO) ==
+这些模块按功能大致可分为编译器、MPI环境、工具库等，下面分别予以说明。
 
-== cuda-5.0 ==
+== 编译器 ==
 
-<pre>prepend PATH /lustre/utility/cuda-5.0/bin</pre>
+<math>\pi</math>集群上可以使用的编译器包括：GNU编译器(GCC)、Intel编译器、PGI编译器。 GCC-4.4.6编译器安装在操作系统目录下，能直接使用，不需要加载模块。 GCC-4.8.1、Intel编译器和PGI编译器需要加载相应模块。 编译器模块信息如下：
+
+<table>
+<thead>
+<tr class="header">
+<th align="center">模块</th>
+<th align="center">编译器版本</th>
+<th align="center">C编译器</th>
+<th align="center">C++编译器</th>
+<th align="center">F77编译器</th>
+<th align="center">F90编译器</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">gcc/4.4.6(默认)</td>
+<td align="center">4.4.6</td>
+<td align="center">gcc</td>
+<td align="center">g++</td>
+<td align="center">g77</td>
+<td align="center">gfortran</td>
+</tr>
+<tr class="even">
+<td align="center">gcc/4.8.1</td>
+<td align="center">4.8.1</td>
+<td align="center">gcc</td>
+<td align="center">g++</td>
+<td align="center">g77</td>
+<td align="center">gfortran</td>
+</tr>
+<tr class="odd">
+<td align="center">icc/13.1.1</td>
+<td align="center">13.1.1</td>
+<td align="center">icc</td>
+<td align="center">icpc</td>
+<td align="center">ifort</td>
+<td align="center">ifort</td>
+</tr>
+<tr class="even">
+<td align="center">pgi/13.9</td>
+<td align="center">13.9</td>
+<td align="center">pgcc</td>
+<td align="center">pgc++</td>
+<td align="center">无</td>
+<td align="center">无</td>
+</tr>
+</tbody>
+</table>
+
+<math>\pi</math>集群上的Nvidia CUDA开发环境版本为5.0，使用前请加载模块<code>cuda-default</code>或者<code>cuda/5.0</code>。
+
+== MPI环境 ==
+
+<math>\pi</math>集群可用的MPI库比较丰富，包括Intel MPI(IMPI)、MPICH2和OpenMPI。 按照<code>mpicc</code>、<code>mpicxx</code>、<code>mpif77</code>和<code>mpif90</code>使用的后端编译器，MPICH2与OpenMPI还可以再细分为不同版本。
+
+<table>
+<thead>
+<tr class="header">
+<th align="center">模块</th>
+<th align="center">版本</th>
+<th align="center">mpicc</th>
+<th align="center">mpicxx</th>
+<th align="center">mpif77</th>
+<th align="center">mpif90</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">impi/4.1.1.036</td>
+<td align="center">4.1.1</td>
+<td align="center">gcc</td>
+<td align="center">g++</td>
+<td align="center">g77</td>
+<td align="center">gfortran</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">(mpiicc uses icc)</td>
+<td align="center">(mpicpc uses icpc)</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">mpich2/icc/1.4.1p1</td>
+<td align="center">1.4.1p1</td>
+<td align="center">icc</td>
+<td align="center">icpc</td>
+<td align="center">ifort</td>
+<td align="center">ifort</td>
+</tr>
+<tr class="even">
+<td align="center">mpich2/gcc/1.4.1p1</td>
+<td align="center">1.4.1p1</td>
+<td align="center">gcc</td>
+<td align="center">g++</td>
+<td align="center">g77</td>
+<td align="center">gfortran</td>
+</tr>
+<tr class="odd">
+<td align="center">openmpi/icc/1.6.4</td>
+<td align="center">1.6.4</td>
+<td align="center">icc</td>
+<td align="center">g++</td>
+<td align="center">g77</td>
+<td align="center">gfortran</td>
+</tr>
+<tr class="even">
+<td align="center">openmpi/gcc/1.6.4</td>
+<td align="center">1.6.4</td>
+<td align="center">gcc</td>
+<td align="center">g++</td>
+<td align="center">g77</td>
+<td align="center">gfortran</td>
+</tr>
+</tbody>
+</table>
+
+== 工具库 ==
+
+<math>\pi</math>集群上的工具库模块包括：<code>mkl</code>(Intel数学函数库)、<code>fftw</code>（FFTW快速傅里叶变换库）。 用户可根据需要，载入响应模块。
+
+= 在编译和提交作业时使用module =
+
+在集群上使用编译器和特定软件库时，往往需要在启动脚本中设置复杂的环境变量。 让用户手工维护这些设置不仅容易出错，而且用户到另一个集群工作时，又需要针对新环境逐一修改变量。 使用Environment module后，将环境准备的工作交给管理员，用户按需加载模块，用同一组命令就能在不同集群上完成环境设定的工作。
+
+下面以Intel MPI程序的编译和提交为例，说明module的作用。
+
+=== 编译时使用module ===
+
+Intel 编译器/MPI环境的设定包括一系列复杂的环境变量设定，需要运行脚本完成配置。 典型过程如下：
+
+<pre>$ source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
+$ source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
+$ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
+$ mpiicc -o mpihello mpihello.c</pre>
+使用module可以使环境设定的过程更清晰：
+
+<pre>$ module load icc/13.1.1 
+$ module load mkl/11.0.3
+$ module load impi/4.1.1.036  
+$ mpiicc -o mpihello mpihello.c</pre>
+=== LSF提交作业时使用module ===
+
+使用LSF提交作业时，作业控制脚本中通常也会包含一系列环境设定脚本，譬如：
+
+<pre>source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
+source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
+source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh</pre>
+这部分也可以用module指令替代。 ''注意，LSF默认使用<code>/bin/sh</code>解析作业脚本指令(没有module功能)，且不传递<code>$HOME</code>、<code>$USER</code>、<code>$SHELL</code>、<code>$LONGNAME</code>以外的环境变量。 若要在LSF作业脚本中使用module，我们需要指定一个带有module功能的Shell(如<code>/bin/bash</code>)，并正确设定<code>MODULEPATH</code>变量。'' 下面这个LSF作业片段供参考：
+
+<pre>#BSUB -L /bin/bash
+
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+
+module load icc/13.1.1 
+module load mkl/11.0.3
+module load impi/4.1.1.036  </pre>
+= 编写自定义module =
+
+用户可根据<code>modulefile</code>规则，自己编写所需的module。 用户自定义module的目录，加入<code>MODULEPATH</code>变量后方能生效。
+
+<!--
+常见错误
+======
+-->
+
 = 参考资料 =
 
 * “Environment Module” http://modules.sourceforge.net/
+* “Environment Module: Manual Page” http://modules.sourceforge.net/man/module.html
+* “Modules Software Environment” https://www.nersc.gov/users/software/nersc-user-environment/modules/

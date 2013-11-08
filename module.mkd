@@ -1,117 +1,195 @@
-% 使用Environment Module设置应用环境
+% 使用Environment module(环境模块)设置应用环境
 % 上海交通大学高性能计算中心\
 <http://hpc.sjtu.edu.cn>
-% 2013年9月24日 更新
+% 2013年11月8日 更新
 
-基本信息
+"Environment module"(环境模块)是一组环境变量设置的集合。
+module可以被加载(```load```)、卸载(```unload```)、切换(```switch```)，这些操作会改变相应的环境变量设置，从而让用户方便地在不同环境间切换。
+相比与将环境变量设置写入```/etc/profile```或者```~/.bashrc```，Environment module操作只影响当前用户的当前登录环境，不会因错误配置造成全局持续的破坏。
+普通用户也可以自己编写module，具有很好的定制性。
+
+
+基本命令
 ======
 
-* 系统module所在位置：```/lustre/utility/modulefiles```
-* 全局导入方法：在```/etc/profile```末尾添加：
-		export MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
-
-命令
-======
-
-查看module命令列表：
+```module```命令列表
+------
 
 	$ module
 
-查看可用模块：
+或者，
+
+	$ module -h
+
+查看可用模块```avail```
+------
 
 	$ module avail
 
-查看已经加载的模块：
+查看已加载模块```list```
+------
 
 	$ module list
 
-加载某模块：
+加载模块```load```
+------
 
 	$ module load MODULE_NAME
 
-卸载模块：
+卸载模块```unload```
+------
 
 	$ module unload MODULE_NAME
 
+切换模块```switch```
+------
 
-模块内容
+	$ module switch OLD_MODULE NEW_MODULE
+
+等价于：
+
+	$ module unload OLD_MODULE; module load NEW_MODULE
+
+卸载所有已加载的模块```purge```
+------
+
+	$ module purge
+
+显示模块说明```whatis```
+------
+	
+	$ module whatis MODULE_NAME
+
+显示该模块内容```display```
+------
+
+	$ module display MODULE_NAME
+
+Pi集群module功能说明
 ======
 
-intel-compiler
-------
+$\pi$集群预设了如下module:
 
-	#%Module 1.0
-	prepend-path PATH /lustre/utility/intel/composerxe/bin/intel64
-	prepend-path PATH /lustre/utility/intel/impi/4.1.1.036/intel64/bin
-	prepend-path MANPATH /lustre/utility/intel/composerxe/man/en_US
-	prepend-path LD_LIBRARY_PATH /lustre/utility/intel/mkl/lib/intel64
+	$ module avail 
+	----------------- /lustre/utility/modulefiles ----------------
+	compiler-default   	mpi-default
+	fftw/impi/3.3.3        fftw/openmpi/gcc/3.3.3 icc/13.1.1             
+	cuda/5.0               fftw/mpich2/gcc/3.3.3  fftw/openmpi/icc/3.3.3 impi/4.1.1.036
+	cuda-default           fftw/mpich2/icc/3.3.3  gcc/4.8.1              mkl/11.0.3    
+	openmpi/gcc/1.6.4      mpich2/gcc/1.4.1p1     pgi/13.9
+	openmpi/icc/1.6.4      mpich2/icc/1.4.1p1
 
-intel-mpi
-------
+模块命名规则是：
 
-	To be determined.
+	软件名/MPI库/编译器/版本
+
+其中"MPI库"和"编译器"是命名时的可选项。
+譬如，```fftw/mpich2/gcc/3.3.3```模块表示版本号为3.3.3的FFTW库，这个库支持在MPICH2上并行执行，FFTW和MPICH2库都使用GCC生成。
+又如，```openmpi/gcc/1.6.4```模块表示版本号为1.6.4的OpenMPI库，这个库使用GCC生成。
 	
-mpich2-1.4.1p1-gcc (TODO)
+这些模块按功能大致可分为编译器、MPI环境、工具库等，下面分别予以说明。
+
+编译器
 ------
 
-	#%Module 1.0
-	#
-	#  MPICH2 module for use with 'environment-modules' package:
-	#
+$\pi$集群上可以使用的编译器包括：GNU编译器(GCC)、Intel编译器、PGI编译器。
+GCC-4.4.6编译器安装在操作系统目录下，能直接使用，不需要加载模块。
+GCC-4.8.1、Intel编译器和PGI编译器需要加载相应模块。
+编译器模块信息如下：
+
+|       模块      | 编译器版本 | C编译器 | C++编译器 | F77编译器 | F90编译器 |
+|:---------------:|:----------:|:-------:|:---------:|:---------:|:---------:|
+| gcc/4.4.6(默认) |   4.4.6    |   gcc   |    g++    |    g77    |  gfortran |
+|    gcc/4.8.1    |   4.8.1    |   gcc   |    g++    |    g77    |  gfortran |
+|    icc/13.1.1   |   13.1.1   |   icc   |    icpc   |   ifort   |    ifort  |
+|    pgi/13.9     |   13.9     |   pgcc  |    pgc++  |     无    |     无    |
+
+$\pi$集群上的Nvidia CUDA开发环境版本为5.0，使用前请加载模块```cuda-default```或者```cuda/5.0```。
+
+MPI环境
+------
+
+$\pi$集群可用的MPI库比较丰富，包括Intel MPI(IMPI)、MPICH2和OpenMPI。
+按照```mpicc```、```mpicxx```、```mpif77```和```mpif90```使用的后端编译器，MPICH2与OpenMPI还可以再细分为不同版本。
+
+|        模块       |   版本  | mpicc | mpicxx | mpif77 |  mpif90  |
+|:-----------------:|:-------:|:-----:|:------:|:------:|:--------:|
+|  impi/4.1.1.036   | 4.1.1   |  gcc  |  g++   |  g77   | gfortran |
+|                   |         |(mpiicc uses icc)  | (mpicpc uses icpc)   |  | |
+| mpich2/icc/1.4.1p1| 1.4.1p1 |  icc  |  icpc  |  ifort |   ifort  |
+| mpich2/gcc/1.4.1p1| 1.4.1p1 |  gcc  |  g++   |  g77   | gfortran |
+| openmpi/icc/1.6.4 |  1.6.4  |  icc  |  g++   |  g77   | gfortran | 
+| openmpi/gcc/1.6.4 |  1.6.4  |  gcc  |  g++   |  g77   | gfortran |
+
+
+工具库
+------
+
+$\pi$集群上的工具库模块包括：```mkl```(Intel数学函数库)、```fftw```（FFTW快速傅里叶变换库）。
+用户可根据需要，载入响应模块。
+
+在编译和提交作业时使用module
+======
+
+在集群上使用编译器和特定软件库时，往往需要在启动脚本中设置复杂的环境变量。
+让用户手工维护这些设置不仅容易出错，而且用户到另一个集群工作时，又需要针对新环境逐一修改变量。
+使用Environment module后，将环境准备的工作交给管理员，用户按需加载模块，用同一组命令就能在不同集群上完成环境设定的工作。
+
+下面以Intel MPI程序的编译和提交为例，说明module的作用。
+
+### 编译时使用module
+
+Intel 编译器/MPI环境的设定包括一系列复杂的环境变量设定，需要运行脚本完成配置。
+典型过程如下：
+
+	$ source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
+	$ source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
+	$ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
+	$ mpiicc -o mpihello mpihello.c
+
+使用module可以使环境设定的过程更清晰：
+
+	$ module load icc/13.1.1 
+	$ module load mkl/11.0.3
+	$ module load impi/4.1.1.036  
+	$ mpiicc -o mpihello mpihello.c
+
+### LSF提交作业时使用module
+
+使用LSF提交作业时，作业控制脚本中通常也会包含一系列环境设定脚本，譬如：
+
+
+	source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
+	source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
+	source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
+
+这部分也可以用module指令替代。
+*注意，LSF默认使用```/bin/sh```解析作业脚本指令(没有module功能)，且不传递```$HOME```、```$USER```、```$SHELL```、```$LONGNAME```以外的环境变量。
+若要在LSF作业脚本中使用module，我们需要指定一个带有module功能的Shell(如```/bin/bash```)，并正确设定```MODULEPATH```变量。*
+下面这个LSF作业片段供参考：
+
+	#BSUB -L /bin/bash
 	
-	# Define prefix so PATH and MANPATH can be updated.
-	setenv        MPI_BIN       /usr/lib64/mpich2/bin
-	setenv        MPI_SYSCONFIG /etc/mpich2-x86_64
-	setenv        MPI_FORTRAN_MOD_DIR /usr/include/mpich2-x86_64
-	setenv        MPI_INCLUDE   /usr/include/mpich2-x86_64
-	setenv        MPI_LIB       /usr/lib64/mpich2/lib
-	setenv        MPI_MAN       /usr/share/man/mpich2
-	setenv        MPI_PYTHON_SITEARCH       /usr/lib64/mpich2/bin
-	setenv        MPI_COMPILER  mpich2-x86_64
-	setenv        MPI_SUFFIX    _mpich2
-	setenv        MPI_HOME      /usr/lib64/mpich2
-	prepend-path  PATH          /usr/lib64/mpich2/bin
-	prepend-path  MANPATH       /usr/share/man/mpich2
-
-mpich2-1.4.1p1-intel (TODO)
-------
-
-	#%Module 1.0
-	#
-	#  MPICH2 module for use with 'environment-modules' package:
-	#
+	MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
 	
-	# Define prefix so PATH and MANPATH can be updated.
-	setenv        MPI_BIN       /usr/lib64/mpich2/bin
-	setenv        MPI_SYSCONFIG /etc/mpich2-x86_64
-	setenv        MPI_FORTRAN_MOD_DIR /usr/include/mpich2-x86_64
-	setenv        MPI_INCLUDE   /usr/include/mpich2-x86_64
-	setenv        MPI_LIB       /usr/lib64/mpich2/lib
-	setenv        MPI_MAN       /usr/share/man/mpich2
-	setenv        MPI_PYTHON_SITEARCH       /usr/lib64/mpich2/bin
-	setenv        MPI_COMPILER  mpich2-x86_64
-	setenv        MPI_SUFFIX    _mpich2
-	setenv        MPI_HOME      /usr/lib64/mpich2
-	prepend-path  PATH          /usr/lib64/mpich2/bin
-	prepend-path  MANPATH       /usr/share/man/mpich2
+	module load icc/13.1.1 
+	module load mkl/11.0.3
+	module load impi/4.1.1.036  
 
-fftw-impi-3.3.3 (TODO)
-------
+编写自定义module
+======
 
-	prepend-path	LD_LIBRARY_PATH	/lustre/software/fftw3/fftw-3.3.3_impi/FLOAT/lib
-	
-openmpi-gcc (TODO)
-------
+用户可根据```modulefile```规则，自己编写所需的module。
+用户自定义module的目录，加入```MODULEPATH```变量后方能生效。
 
-openmpi-intel (TODO)
-------
-
-cuda-5.0
-------
-
-	prepend PATH /lustre/utility/cuda-5.0/bin
+<!--
+常见错误
+======
+-->
 
 参考资料
 =====
-* "Environment Module" http://modules.sourceforge.net/ 
+* "Environment Module" <http://modules.sourceforge.net/>
+* "Environment Module: Manual Page"  <http://modules.sourceforge.net/man/module.html>
+* "Modules Software Environment" <https://www.nersc.gov/users/software/nersc-user-environment/modules/>
 
