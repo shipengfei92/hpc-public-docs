@@ -1,11 +1,8 @@
-man_SSH  	:= ssh
-man_SSH_EN	:= ssh_en
-man_LSF  	:= lsf
-man_LSF_EN	:= lsf_en
-man_VPN  	:= vpn
-man_VPN_EN  	:= vpn_en
-man_module  	:= module
-man_module  	:= module_en
+SRC = $(wildcard *.mkd)
+SRC_NAME = $(SRC:%.mkd=)
+OUT_PDF = $(SRC:%.mkd=%.pdf) 
+OUT_WIKI = $(SRC:%.mkd=%.wiki) 
+
 # Document Class
 DOCCLASS := hpcmanual
 # LATEX_OPT = -xelatex -silent -f
@@ -16,14 +13,11 @@ PANDOC_WIKI := -f markdown -t mediawiki --smart --standalone
 REPOURL = https://raw.github.com/weijianwen/hpc-manual-class/master/pandoc
 # pdf viewer: evince/open
 VIEWER = open
-# version number, which can be specified when calling make like
-# make VERSION="0.5.2"
-VERSION = 0.5.3
 
-.PHONY : all clean version distclean release
+.PHONY : all clean distclean release
 .PRECIOUS : %.tex
 
-all: $(man_SSH).pdf $(man_SSH).wiki $(man_SSH_EN).pdf $(man_SSH_EN).wiki $(man_LSF).pdf $(man_LSF).wiki $(man_LSF_EN).pdf $(man_LSF_EN).wiki $(man_module).pdf $(man_module).wiki 
+all: $(OUT_PDF) $(OUT_WIKI)
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
 	-@latexmk $(LATEX_OPT) $*
@@ -38,7 +32,6 @@ $(DOCCLASS).% :
 	cp pandoc/$@ ./
 
 clean :
-	-@latexmk -f -c $(man_SSH)
 	-@rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out *.cfg *.cls *.latex *.log
 
 update :
@@ -47,8 +40,7 @@ update :
 	@wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
 
 distclean : clean
-	-@rm *.pdf
-	-@latexmk -f -C $(man_SSH)
+	-@rm $(OUT_WIKI) $(OUT_PDF)
 
 release :
 	git push gitlab
