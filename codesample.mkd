@@ -74,11 +74,16 @@ MPI示例
 使用```mpirun```在本地测试运行
 ------
 
+测试运行需要准备```machinefile```，这个文件用来指定程序运行的主机。
+我们仅在本机做测试运行，因此machinefile内容只有```localhost```。
+
+	$ echo "localhost" > machinefile.txt
+
 ```mpirun```用于启动MPI并行程序。
 下面的命令启动```mpihello```并行程序，分配4个线程。
 *注意：在$\pi$集群中，```mpirun```只能用作小于4线程的测试，大规模正式作业必须提交到LSF。*
 
-	$ mpirun -np 4 ./mpihello
+	$ mpirun -np 4 -machinefile machinefile.txt ./mpihello
 	Rank 0 of 4 has pid 90037 on mu05
 	Rank 1 of 4 has pid 90038 on mu05
 	Rank 2 of 4 has pid 90039 on mu05
@@ -88,6 +93,7 @@ MPI示例
 ------
 
 大规模正式作业必须提交到LSF作业管理系统。	
+提交的作业由LSF作业管理系统统一调度运行，用户不需要手动书写```machinefile```。
 作业控制脚本```mpihello.lsf```内容如下：
 
 	#BSUB -J HELLO_MPI
@@ -102,11 +108,7 @@ MPI示例
 	MPIRUN=`which mpirun`
 	EXE="./mpihello"
 	
-	CURDIR=$PWD
-	cd $CURDIR
-	rm -f nodelist nodes >& /dev/null
-	touch nodelist
-	touch nodes
+	cat /dev/null > nodelist
 	NP=0
 	
 	for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
@@ -116,6 +118,8 @@ MPI示例
 	nn=`echo $host | cut -d ":" -f2`
 	NP=`echo $NP+$nn | bc`
 	done
+
+	$MPIRUN -np $NP -machinefile nodelist $EXE >& $EXE.log
 
 将作业提交到名为```cpu```的队列上：
 
@@ -155,11 +159,7 @@ MPI示例
 		MPIRUN=`which mpirun`
 		EXE="./mpihello"
 		
-		CURDIR=$PWD
-		cd $CURDIR
-		rm -f nodelist nodes >& /dev/null
-		touch nodelist
-		touch nodes
+		cat /dev/null > nodelist
 		NP=0
 		
 		for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
@@ -169,7 +169,9 @@ MPI示例
 		nn=`echo $host | cut -d ":" -f2`
 		NP=`echo $NP+$nn | bc`
 		done
-
+		
+		$MPIRUN -np $NP -machinefile nodelist $EXE >& $EXE.log
+	
 提交作业：
 
 		$ busb -q cpu < mpihelllo.lsf

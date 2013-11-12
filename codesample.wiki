@@ -61,16 +61,19 @@ $ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
 $ mpicc -o mpihello mpihello.c</pre>
 == 使用<code>mpirun</code>在本地测试运行 ==
 
+测试运行需要准备<code>machinefile</code>，这个文件用来指定程序运行的主机。 我们仅在本机做测试运行，因此machinefile内容只有<code>localhost</code>。
+
+<pre>$ echo &quot;localhost&quot; &gt; machinefile.txt</pre>
 <code>mpirun</code>用于启动MPI并行程序。 下面的命令启动<code>mpihello</code>并行程序，分配4个线程。 ''注意：在<math>\pi</math>集群中，<code>mpirun</code>只能用作小于4线程的测试，大规模正式作业必须提交到LSF。''
 
-<pre>$ mpirun -np 4 ./mpihello
+<pre>$ mpirun -np 4 -machinefile machinefile.txt ./mpihello
 Rank 0 of 4 has pid 90037 on mu05
 Rank 1 of 4 has pid 90038 on mu05
 Rank 2 of 4 has pid 90039 on mu05
 Rank 3 of 4 has pid 90040 on mu05</pre>
 == 提交到LSF作业管理系统 ==
 
-大规模正式作业必须提交到LSF作业管理系统。<br />作业控制脚本<code>mpihello.lsf</code>内容如下：
+大规模正式作业必须提交到LSF作业管理系统。<br />提交的作业由LSF作业管理系统统一调度运行，用户不需要手动书写<code>machinefile</code>。 作业控制脚本<code>mpihello.lsf</code>内容如下：
 
 <pre>#BSUB -J HELLO_MPI
 #BSUB -o job.out
@@ -84,11 +87,7 @@ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
 MPIRUN=`which mpirun`
 EXE=&quot;./mpihello&quot;
 
-CURDIR=$PWD
-cd $CURDIR
-rm -f nodelist nodes &gt;&amp; /dev/null
-touch nodelist
-touch nodes
+cat /dev/null &gt; nodelist
 NP=0
 
 for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
@@ -97,7 +96,9 @@ echo $host &gt;&gt; nodelist
 echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
 nn=`echo $host | cut -d &quot;:&quot; -f2`
 NP=`echo $NP+$nn | bc`
-done</pre>
+done
+
+$MPIRUN -np $NP -machinefile nodelist $EXE &gt;&amp; $EXE.log</pre>
 将作业提交到名为<code>cpu</code>的队列上：
 
 <pre>$ bsub -q cpu &lt; mpihello.lsf</pre>
@@ -130,11 +131,7 @@ module load impi/4.1.1.036
 MPIRUN=`which mpirun`
 EXE=&quot;./mpihello&quot;
 
-CURDIR=$PWD
-cd $CURDIR
-rm -f nodelist nodes &gt;&amp; /dev/null
-touch nodelist
-touch nodes
+cat /dev/null &gt; nodelist
 NP=0
 
 for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
@@ -143,7 +140,9 @@ echo $host &gt;&gt; nodelist
 echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
 nn=`echo $host | cut -d &quot;:&quot; -f2`
 NP=`echo $NP+$nn | bc`
-done</pre></li></ol>
+done
+
+$MPIRUN -np $NP -machinefile nodelist $EXE &gt;&amp; $EXE.log</pre></li></ol>
 
 提交作业：
 
