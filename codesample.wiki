@@ -101,9 +101,11 @@ done</pre>
 将作业提交到名为<code>cpu</code>的队列上：
 
 <pre>$ bsub -q cpu &lt; mpihello.lsf</pre>
-作业运行结束后，查看当前目录下的输出结果。
+作业运行结束后，在工作目录下前查看输出结果<code>job.out</code>、<code>job.err</code>、<code>mpihello.log</code>。
 
 == 使用module简化环境设置 ==
+
+使用Environment Module可以简化环境变量的书写，过程如下。
 
 <ol style="list-style-type: decimal;">
 <li><p>编译源程序。</p>
@@ -121,7 +123,7 @@ $ mpiicc -o mpihello mpihello.c </pre></li>
 #BSUB -n 256
 
 MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
-module unload icc/13.1.1
+module load icc/13.1.1
 module load mkl/11.0.3
 module load impi/4.1.1.036
 
@@ -143,9 +145,109 @@ nn=`echo $host | cut -d &quot;:&quot; -f2`
 NP=`echo $NP+$nn | bc`
 done</pre></li></ol>
 
+提交作业：
+
+<pre>    $ busb -q cpu &lt; mpihelllo.lsf</pre>
 = CUDA示例 =
 
+这部分演示如何编译NVIDIA CUDA程序，并提交到LSF的gpu队列中运行。 ''注意：登录节点只有CUDA软件开发环境，没有CUDA硬件加速卡，因而不能在登录节点执行CUDA应用程序，必须把作业提交到LSF的gpu队列运行。''
+
+== 编译源代码 ==
+
+示例的CUDA源程序名为<code>cudahello.cu</code>，内容如下：
+
+<pre>#include &lt;stdio.h&gt;
+
+const int N = 7;
+const int blocksize = 7;
+
+__global__
+void hello(char *a, int *b)
+{
+ a[threadIdx.x] += b[threadIdx.x];
+}
+
+int main()
+{
+ char a[N] = &quot;Hello &quot;;
+ int b[N] = {15, 10, 6, 0, -11, 1, 0};
+
+ char *ad;
+ int *bd;
+ const int csize = N*sizeof(char);
+ const int isize = N*sizeof(int);
+
+ printf(&quot;%s&quot;, a);
+
+ cudaMalloc( (void**)&amp;ad, csize );
+ cudaMalloc( (void**)&amp;bd, isize );
+ cudaMemcpy( ad, a, csize, cudaMemcpyHostToDevice );
+ cudaMemcpy( bd, b, isize, cudaMemcpyHostToDevice );
+
+ dim3 dimBlock( blocksize, 1 );
+ dim3 dimGrid( 1, 1 );
+ hello&lt;&lt;&lt;dimGrid, dimBlock&gt;&gt;&gt;(ad, bd);
+ cudaMemcpy( a, ad, csize, cudaMemcpyDeviceToHost );
+ cudaFree( ad );
+
+ printf(&quot;%s\n&quot;, a);
+ return EXIT_SUCCESS;
+}</pre>
+我们使用NVIDIA CUDA SDK提供的<code>nvcc</code>对其编译。 使用<code>nvcc</code>前需要设置一些环境变量。
+
+<pre>$ export PATH=/lustre/utility/cuda-5.0/bin/:$PATH
+$ export C_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$C_INCLUDE_PATH
+$ export CPLUS_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$CPLUS_INCLUDE_PATH
+$ export LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LIBRARY_PATH
+$ export LD_LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LD_LIBRARY_PATH
+$ nvcc -o cudahello cudahello.cu</pre>
+== 提交到LSF作业系统的gpu队列运行 ==
+
+由于登录节点没有安装CUDA加速卡，因此不能运行CUDA程序。 CUDA程序必须提交到LSF作业管理系统的gpu队列运行。 用于提交单节点CUDA作业的LSF作业控制脚本<code>cudahello.lsf</code>内容如下：
+
+<pre>#BSUB -J HELLO_CUDA
+#BSUB -L /bin/bash
+#BSUB -o job.out
+#BSUB -e job.err
+#BSUB -n 1
+        
+export PATH=/lustre/utility/cuda-5.0/bin/:$PATH
+export C_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LD_LIBRARY_PATH
+
+./cudahello &gt;&amp; cudahello.log</pre>
+将CUDA作业提交到<code>gpu</code>队列上：
+
+<pre>$ bsub -q gpu &lt; cudahello.lsf</pre>
+作业运行结束后，在工作目录下查看输出结果<code>job.out</code>、<code>job.err</code>、<code>cudahello.log</code>。
+
+== 使用module简化环境设置 ==
+
+使用Environment Module可以简化环境变量的书写，过程如下。
+
+<ol style="list-style-type: decimal;">
+<li><p>编译源程序。</p>
+<pre>$ module load cuda/5.0
+$ nvcc -o cudahello cudahello.cu</pre></li>
+<li><p>提交到LSF的gpu队列，使用的作业脚本为<code>cuda.lsf</code>，内容如下：</p>
+<pre>#BSUB -J HELLO_CUDA
+#BSUB -L /bin/bash
+#BSUB -o job.out
+#BSUB -e job.err
+#BSUB -n 1
+
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module load cuda/5.0
+
+./cudahello &gt;&amp; cudahello.log</pre></li></ol>
+
+提交到gpu队列：
+
+<pre>    $ bsub -q gpu &lt; cuda.lsf</pre>
 = 参考资料 =
 
 * “LLNL Tutorials: Message Passing Interface (MPI)” https://computing.llnl.gov/tutorials/mpi/
 * “mpihello by ludwig Luis Armendariz” https://github.com/ludwig/examples
+* “How to compile and run a simple CUDA Hello World” http://www.pdc.kth.se/resources/computers/zorn/how-to/how-to-compile-and-run-a-simple-cuda-hello-world
