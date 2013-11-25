@@ -21,7 +21,7 @@ Notices {-}
 * Please keep your SSH account and password carefully and don't share it with others. The staffs of HPCC won't ask for your SSH password.
 * Malicious SSH clients, especially some "sinicizing client", may steal your SSH password^[Report about Chinese version Putty backdoor incident, please refer to <http://www.cnbeta.com/articles/171116.htm>], please use the English version SSH software recommended by [Client Downloading].
 * Please don't jump to log in other nodes after you log in the HPC cluster. Shut down the SSH session when you finished your job.
-* If you type the wrong password repeatedly, or use the ip address not in the "white list", you may not log in successfully. Please refer to [The troubleshooting and feedback], and send the diagnostic message to the administrator<weijianwen@sjtu.edu.cn>.
+* If you type the wrong password repeatedly, or use the ip address not in the "white list", you may not log in successfully. Please refer to [The troubleshooting and feedback], and send the diagnostic message to the administrator<sjtuhpc-sysadmin@googlegroups.com>.
 
 Preparation
 ======
@@ -158,7 +158,7 @@ After login to the cluster, you can use ```yppasswd``` to change your SSH passwo
 
     $ yppasswd
 
-Or, you can contact with the [administrator](mailto:weijianwen@sjtu.edu.cn).
+Or, you can contact with the [administrator](mailto:sjtuhpc-sysadmin@googlegroups.com).
 
 Troubleshooting and Feedback
 ======
@@ -178,7 +178,7 @@ There are many reason that may make you cannot log in the HPC cluster, you can c
 
     $ ssh -v YOUR_USERNAME@202.120.58.229
 
-If the methods above cannot help you to solve the problems, please contact with the [administrator](weijianwen@sjtu.edu.cn), and append your self-check result to the email.
+If the methods above cannot help you to solve the problems, please contact with the [administrator](mailto:sjtuhpc-sysadmin@googlegroups.com), and append your self-check result to the email.
 *Suggest you directly copy the result of self-check as text and don't take the screenshot*
 
 References

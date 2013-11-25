@@ -10,7 +10,7 @@
 * 请保存好SSH用户名和密码，切勿告诉他人，高性能计算中心工作人员不会索取用户的SSH密码。
 * 恶意的SSH客户端，特别是某些“汉化版客户端”，可能会窃取您的SSH密码<ref>中文版Putty后门事件的报道，请参考 http://www.cnbeta.com/articles/171116.htm</ref>，请使用[[#下载客户端|下载客户端]]一节中推荐的英文版SSH软件。
 * 用户登录到高性能计算集群后，请勿跳转登录到其他节点。使用结束后请及时关闭SSH会话。
-* 如果连续多次输入错误的SSH密码，或者使用了“白名单”以外的IP地址连接集群，可能导致您无法登录。请参考[[#问题诊断和反馈|问题诊断和反馈]]中的建议自查，并将诊断信息发送给管理员[mailto:weijianwen@sjtu.edu.cn weijianwen@sjtu.edu.cn]。
+* 如果连续多次输入错误的SSH密码，或者使用了“白名单”以外的IP地址连接集群，可能导致您无法登录。请参考[[#问题诊断和反馈|问题诊断和反馈]]中的建议自查，并将诊断信息发送给管理员[mailto:sjtuhpc-sysadmin@googlegroups.com sjtuhpc-sysadmin@googlegroups.com]。
 
 = 准备工作 =
 
@@ -115,7 +115,7 @@ User YOUR_USERNAME</pre>
 登录集群后，您可以使用<code>yppasswd</code>更改SSH密码。''注意：请不要使用<code>passwd</code>更改密码，<code>passwd</code>更改的密码不能在集群中生效。''
 
 <pre>$ yppasswd</pre>
-如果需要重设密码，请与[mailto:weijianwen@sjtu.edu.cn 管理员]联系。
+如果需要重设密码，请与[mailto:sjtuhpc-sysadmin@googlegroups.com 管理员]联系。
 
 = 问题诊断和反馈 =
 
@@ -130,7 +130,7 @@ User YOUR_USERNAME</pre>
 <li><p>查看详细的SSH连接信息：</p>
 <pre>$ ssh -v YOUR_USERNAME@202.120.58.229</pre></li></ol>
 
-如果以上的自查步骤仍无法帮助您解决登录问题，请和[[weijianwen@sjtu.edu.cn|管理员]]联系，并将以上的自查结果以及您的用户名附在邮件中。 ''建议您直接将自查程序的运行结果以文本复制到邮件中，“截图”不便于转发和问题追溯，请尽量不要使用。''
+如果以上的自查步骤仍无法帮助您解决登录问题，请和[[sjtuhpc-sysadmin@googlegroups.com|管理员]]联系，并将以上的自查结果以及您的用户名附在邮件中。 ''建议您直接将自查程序的运行结果以文本复制到邮件中，“截图”不便于转发和问题追溯，请尽量不要使用。''
 
 = 参考资料 =
 

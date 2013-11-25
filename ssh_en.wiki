@@ -14,7 +14,7 @@ Follwing the document’s operation and feedback’s methods will help you compl
 * Please keep your SSH account and password carefully and don’t share it with others. The staffs of HPCC won’t ask for your SSH password.
 * Malicious SSH clients, especially some “sinicizing client”, may steal your SSH password<ref>Report about Chinese version Putty backdoor incident, please refer to http://www.cnbeta.com/articles/171116.htm</ref>, please use the English version SSH software recommended by [[#client-downloading|Client Downloading]].
 * Please don’t jump to log in other nodes after you log in the HPC cluster. Shut down the SSH session when you finished your job.
-* If you type the wrong password repeatedly, or use the ip address not in the “white list”, you may not log in successfully. Please refer to [The troubleshooting and feedback], and send the diagnostic message to the administrator[mailto:weijianwen@sjtu.edu.cn weijianwen@sjtu.edu.cn].
+* If you type the wrong password repeatedly, or use the ip address not in the “white list”, you may not log in successfully. Please refer to [The troubleshooting and feedback], and send the diagnostic message to the administrator[mailto:sjtuhpc-sysadmin@googlegroups.com sjtuhpc-sysadmin@googlegroups.com].
 
 = Preparation =
 
@@ -127,7 +127,7 @@ After login to the cluster, you can use <code>yppasswd</code> to change your SSH
 ''Note: Please don’t use <code>passwd</code> to change the password, it doesn’t work.''
 
 <pre>$ yppasswd</pre>
-Or, you can contact with the [mailto:weijianwen@sjtu.edu.cn administrator].
+Or, you can contact with the [mailto:sjtuhpc-sysadmin@googlegroups.com administrator].
 
 = Troubleshooting and Feedback =
 
@@ -142,7 +142,7 @@ There are many reason that may make you cannot log in the HPC cluster, you can c
 <li><p>Check the details of SSH connecting information:</p>
 <p>$ ssh -v YOUR_USERNAME@202.120.58.229</p></li></ol>
 
-If the methods above cannot help you to solve the problems, please contact with the [[weijianwen@sjtu.edu.cn|administrator]], and append your self-check result to the email. ''Suggest you directly copy the result of self-check as text and don’t take the screenshot''
+If the methods above cannot help you to solve the problems, please contact with the [mailto:sjtuhpc-sysadmin@googlegroups.com administrator], and append your self-check result to the email. ''Suggest you directly copy the result of self-check as text and don’t take the screenshot''
 
 = References =
 
