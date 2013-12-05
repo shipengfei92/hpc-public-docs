@@ -4,58 +4,91 @@ IBM Platform LSF是一个被广泛使用的作业管理系统，具有高吞吐�
 
 遵循文档的操作规范和反馈方法，将帮助您顺利完成工作。也欢迎大家对文档内容[[sjtuhpc-sysadmin@googlegroups.com|提出建议]]，谢谢！
 
-= 查看LSF可用资源 =
-
-== 计算队列<code>bqueues</code> ==
+= 查看计算队列<code>bqueues</code> =
 
 作业队列是一系列可用的计算资源池，不同的队列在软硬件配置上有侧重，适合不同性质的作业。 用户可以使用<code>bqueues</code>查看Pi集群可用的计算队列：
 
+<pre>$ bqueues
+QUEUE_NAME      PRIO STATUS          MAX JL/U JL/P JL/H NJOBS  PEND   RUN  SUSP 
+cpu              40  Open:Active       -    -    -    -  4135     0  4135     0
+fat              40  Open:Active       -    -    -    -    32     0    32     0
+gpu              40  Open:Active       -    -    -    -   560     0   560     0
+mic              40  Open:Active       -    -    -    -     0     0     0     0</pre>
+Pi集群可用的计算队列有四个，分别是<code>cpu</code>、<code>fat</code>、<code>gpu</code>和<code>mic</code>。 各队列的硬件配置简要说明如下：
+
+* cpu: 采用双路8核服务器，64GB内存，共332台服务器，合计5312个CPU核心、约21TB内存。这个队列容量大，适合处理大型计算任务。
+* fat: 采用双路8服务器，256GB内存，共20台服务器，合计320个CPU核心、约5TB内存。这个队列适合进行大内存计算。
+* gpu: 采用双路8核服务器，64GB内存，每节点配备2块NVIDIA K20M加速卡，共50台服务器。合计800个CPU核心、约3TB内存。这个队列适合进行CUDA通用GPU计算。
+* mic: 采用双路8核服务器，64GB内存，每节点配备2块Intel Xeon Phi加速卡，共5台服务器。合计80核CPU、约300GB内存。这个队列适合执行需要MIC加速的程序。
+
 = 作业提交<code>bsub</code> =
 
-== 手动提交作业 ==
+<code>busb</code>命令用于向LSF作业管理系统提交作业请求。 bsub可接收的参数很多，通过指定不同的运行参数，可以精细地设定作业运行需求。
 
-LSF使用bsub提交作业。bsub命令的格式是：
+<pre>$ bsub -h</pre>
+下面分别介绍<code>busb</code>命令调用、提交作业的方法和额外的资源控制参数。
 
-<pre>bsub -n Z -q QUEUENAME -i INPUTFILE -o OUTPUTFILE COMMAND</pre>
-其中：<code>Z</code>提交作业需要的线程数，<code>-q</code>指定作业提交的队列。如果不添加<code>-q</code>选项，系统将把作业提交到默认的作业队列。 <code>INPUTFILE</code>表示程序需要读入的文件名，<code>OUTPUTFILE</code>表示输出文件名，作业提交后的输出到标准输出信息将会保存在这个文件中。
+== bsub调用方法 ==
 
-对于串行作业，<code>COMMAND</code>可以直接使用您的程序名。 例如，将串行程序<code>mytest</code>的通过LSF提交：
+在命令行中，用户可以通过如下三种方法使用bsub命令，三种方法各有优点。
 
-<pre>bsub -n 1 -q q_default -o mytest.out ./mytest</pre>
-对于MPI并行作业，<code>COMMAND</code>的格式为<code>-a mpich_gm mpirun.lsf PROG_NAME</code>。 例如，将并行程序<code>mytest</code>，通过LSF提交，使用16个线程运行这个作业：
+# 直接在命令行中输入完整参数；
+# 进入bsub环境交互提交；
+# 编写作业提交脚本供bsub处理；
 
-<pre>bsub -n 16 -q q_default -o mytest.out -a mpich_gm mpirun.lsf ./mytest</pre>
-== 交互式批量提交 ==
+=== 直接输入完整参数 ===
 
-使用<code>bsub</code>还可以启动一个交互式的shell环境，一次提交多个运行参数相同的并行作业。例如下面的操作：
+直接输入bsub完整参数，可以方便地提交单线程作业。 下面这条命令提交了一个需要一个CPU核运行的单线程作业：
 
-<pre># bsub
-bsub&gt; -n 16
-bsub&gt; -q q_default
-bsub&gt; -o output.txt
-bsub&gt; COMMAND1
-bsub&gt; COMMAND2
-bsub&gt; COMMAND3</pre>
-等价于：
+<pre>$ bsub -n 1 -q cpu -o job.out ./myprog &quot;-j 3&quot;</pre>
+主要参数说明如下：
 
-<pre>bsub -n 16 -q q_default -o output.txt COMMAND1
-bsub -n 16 -q q_default -o output.txt COMMAND2
-bsub -n 16 -q q_default -o output.txt COMMAND3</pre>
-== 编写LSF作业控制脚本 ==
+* <code>-n</code>指定所需的计算核心数。
+* <code>-q</code>指定作业运行的队列，在Pi集群上可用的计算队列有cpu、fat、gpu和mic。
+* <code>-o</code>指定作业运行信息的输出文件。
+* <code>./myprog</code>是要提交运行的可执行文件，
+* <code>&quot;-j 3&quot;</code>是传递给myprog的命令行参数。
 
-<pre>#BSUB -n 16
-#BSUB -q q_default
-#BSUB -o output.txt
--a mpich_gm mpirun.lsf ./mytest</pre>
-<code>bsub</code>还接受来自标准输入的作业说明。 因此，我们可以编写LSF脚本提交作业。 bsub脚本简单易写，上面一段代码是名为<code>bsub.script</code>的完整例子，将<code>bsub.script</code>通过输入重定向，提交给LSF：
+当然，这种用法仅适用于简单的作业，更复杂的作业控制需要编写作业脚本。
 
-<pre>bsub &lt; bsub.script  </pre>
-这等价于：
+== 交互式提交 ==
 
-<pre>bsub -n 16 -q q_default -o output.txt -a mpich_gm mpirun.lsf ./mytest</pre>
-== 一个功能更完整的LSF作业控制脚本 ==
+键入bsub回车后，可进入bsub交互环境输入作业参数和作业程序。 bsub交互环境的主要有点是可以一次提交多个参数相同的作业。例如：
+
+<pre>$ bsub
+bsub&gt; -n 1
+bsub&gt; -q cpu
+bsub&gt; -o job.out
+bsub&gt; PROG1
+bsub&gt; PROG2
+bsub&gt; PROG3
+bsub&gt; CTRL+d</pre>
+等价于提交了PROG1、PROG2和PROG3三个作业程序：
+
+<pre>$ bsub -n 1 -q cpu -o job.out PROG1
+$ bsub -n 1 -q cpu -o job.out PROG2
+$ bsub -n 1 -q cpu -o job.out PROG3</pre>
+== 使用作业提交脚本 ==
+
+作业脚本是带有“bsub格式”的纯文本文件。 作业脚本易于编辑和复用，是提交复杂作业的最佳形式。 下面是名为<code>job.script</code>的作业脚本的内容：
+
+<pre>#=== Begin job.script ===#
+#BSUB -n 1
+#BSUB -q cpu
+#BSUB -o job.out
+
+./mytest &quot;-j 3&quot;
+#==== End job.script ===#</pre>
+其中以<code>#BSUB</code>开头的行表示bsub作业参数，其他<code>#</code>开头的行为注释行，其他行为脚本运行内容。作业脚本的使用方法很简单，只需要把脚本内容通过标准输入重定向给busb：
+
+<pre>$ bsub &lt; job.script</pre>
+以上脚本等价于如下命令：
+
+<pre>$ bsub -n 1 -q cpu -o job.out ./mytest &quot;-j 3&quot;</pre>
+bsub默认会调用<code>/bin/sh</code>执行脚本内容，因此可以使用Shell编程脚本对作业参数进行处理和控制。 下面这个作业脚本提交了一个需要64核心的MPI计算任务。 这个脚本先设置了一些作业运行参数，调用其他脚本让运行相关的环境变量生效，然后使用一小段Shell脚本从<code>$LSB_MCPU_HOSTS</code>环境变量中创建mpirun所需的nodelist，最后调用<code>mpirun</code>执行MPI并行作业。
 
 <pre>#BSUB -J HELLO_MPI
+#BUSB -q cpu
 #BSUB -o job.out
 #BSUB -e job.err
 #BSUB -n 64
@@ -67,20 +100,16 @@ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
 MPIRUN=`which mpirun`
 EXE=&quot;./mpihello&quot;
 
-CURDIR=$PWD
-cd $CURDIR
+cat /dev/null &gt; nodelist
 
-rm -f nodelist nodes &gt;&amp; /dev/null
-touch nodelist
-touch nodes
-NP=0
 for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
 do
 echo $host &gt;&gt; nodelist
-echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
-nn=`echo $host | cut -d &quot;:&quot; -f2`
-NP=`echo $NP+$nn | bc`
-done</pre>
+done
+
+$MPIRUN -np $NP -machinefile nodelist $EXE</pre>
+关于MPI程序和作业脚本的详细例子，请参考《并行程序示例》中的内容。
+
 = 查看和终止作业 =
 
 == 查看作业状态<code>bjobs</code> ==
