@@ -119,7 +119,7 @@ MPI示例
 	NP=`echo $NP+$nn | bc`
 	done
 
-	$MPIRUN -np $NP -machinefile nodelist $EXE >& $EXE.log
+	$MPIRUN -np $NP -machinefile nodelist $EXE
 
 将作业提交到名为```cpu```的队列上：
 
@@ -170,7 +170,7 @@ MPI示例
 		NP=`echo $NP+$nn | bc`
 		done
 		
-		$MPIRUN -np $NP -machinefile nodelist $EXE >& $EXE.log
+		$MPIRUN -np $NP -machinefile nodelist $EXE
 	
 提交作业：
 

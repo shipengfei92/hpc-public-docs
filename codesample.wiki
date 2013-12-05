@@ -98,7 +98,7 @@ nn=`echo $host | cut -d &quot;:&quot; -f2`
 NP=`echo $NP+$nn | bc`
 done
 
-$MPIRUN -np $NP -machinefile nodelist $EXE &gt;&amp; $EXE.log</pre>
+$MPIRUN -np $NP -machinefile nodelist $EXE</pre>
 将作业提交到名为<code>cpu</code>的队列上：
 
 <pre>$ bsub -q cpu &lt; mpihello.lsf</pre>
@@ -142,7 +142,7 @@ nn=`echo $host | cut -d &quot;:&quot; -f2`
 NP=`echo $NP+$nn | bc`
 done
 
-$MPIRUN -np $NP -machinefile nodelist $EXE &gt;&amp; $EXE.log</pre></li></ol>
+$MPIRUN -np $NP -machinefile nodelist $EXE</pre></li></ol>
 
 提交作业：
 
