@@ -109,23 +109,19 @@ MPI示例
 	EXE="./mpihello"
 	
 	cat /dev/null > nodelist
-	NP=0
 	
 	for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
 	do
 	echo $host >> nodelist
-	echo $host | cut -d ":" -f1 >> nodes
-	nn=`echo $host | cut -d ":" -f2`
-	NP=`echo $NP+$nn | bc`
 	done
 
-	$MPIRUN -np $NP -machinefile nodelist $EXE
+	$MPIRUNP -machinefile nodelist $EXE
 
 将作业提交到名为```cpu```的队列上：
 
 	$ bsub -q cpu < mpihello.lsf
 
-作业运行结束后，在工作目录下前查看输出结果```job.out```、```job.err```、```mpihello.log```。
+作业运行结束后，在工作目录下前查看输出结果```job.out```、```job.err```。
 
 使用module简化环境设置
 ------
@@ -160,17 +156,13 @@ MPI示例
 		EXE="./mpihello"
 		
 		cat /dev/null > nodelist
-		NP=0
 		
 		for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
 		do
 		echo $host >> nodelist
-		echo $host | cut -d ":" -f1 >> nodes
-		nn=`echo $host | cut -d ":" -f2`
-		NP=`echo $NP+$nn | bc`
 		done
 		
-		$MPIRUN -np $NP -machinefile nodelist $EXE
+		$MPIRUN -machinefile nodelist $EXE
 	
 提交作业：
 
@@ -254,13 +246,13 @@ CUDA程序必须提交到LSF作业管理系统的gpu队列运行。
 	export LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LIBRARY_PATH
 	export LD_LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LD_LIBRARY_PATH
 	
-	./cudahello >& cudahello.log
+	./cudahello 
 
 将CUDA作业提交到```gpu```队列上：
 
 	$ bsub -q gpu < cudahello.lsf
 
-作业运行结束后，在工作目录下查看输出结果```job.out```、```job.err```、```cudahello.log```。
+作业运行结束后，在工作目录下查看输出结果```job.out```、```job.err```。
 
 使用module简化环境设置
 ------
@@ -283,7 +275,7 @@ CUDA程序必须提交到LSF作业管理系统的gpu队列运行。
 		MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
 		module load cuda/5.0
 			
-		./cudahello >& cudahello.log
+		./cudahello 
 
 提交到gpu队列：
 

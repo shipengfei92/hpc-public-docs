@@ -88,21 +88,17 @@ MPIRUN=`which mpirun`
 EXE=&quot;./mpihello&quot;
 
 cat /dev/null &gt; nodelist
-NP=0
 
 for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
 do
 echo $host &gt;&gt; nodelist
-echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
-nn=`echo $host | cut -d &quot;:&quot; -f2`
-NP=`echo $NP+$nn | bc`
 done
 
-$MPIRUN -np $NP -machinefile nodelist $EXE</pre>
+$MPIRUNP -machinefile nodelist $EXE</pre>
 将作业提交到名为<code>cpu</code>的队列上：
 
 <pre>$ bsub -q cpu &lt; mpihello.lsf</pre>
-作业运行结束后，在工作目录下前查看输出结果<code>job.out</code>、<code>job.err</code>、<code>mpihello.log</code>。
+作业运行结束后，在工作目录下前查看输出结果<code>job.out</code>、<code>job.err</code>。
 
 == 使用module简化环境设置 ==
 
@@ -132,17 +128,13 @@ MPIRUN=`which mpirun`
 EXE=&quot;./mpihello&quot;
 
 cat /dev/null &gt; nodelist
-NP=0
 
 for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
 do
 echo $host &gt;&gt; nodelist
-echo $host | cut -d &quot;:&quot; -f1 &gt;&gt; nodes
-nn=`echo $host | cut -d &quot;:&quot; -f2`
-NP=`echo $NP+$nn | bc`
 done
 
-$MPIRUN -np $NP -machinefile nodelist $EXE</pre></li></ol>
+$MPIRUN -machinefile nodelist $EXE</pre></li></ol>
 
 提交作业：
 
@@ -216,11 +208,11 @@ export CPLUS_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LD_LIBRARY_PATH
 
-./cudahello &gt;&amp; cudahello.log</pre>
+./cudahello </pre>
 将CUDA作业提交到<code>gpu</code>队列上：
 
 <pre>$ bsub -q gpu &lt; cudahello.lsf</pre>
-作业运行结束后，在工作目录下查看输出结果<code>job.out</code>、<code>job.err</code>、<code>cudahello.log</code>。
+作业运行结束后，在工作目录下查看输出结果<code>job.out</code>、<code>job.err</code>。
 
 == 使用module简化环境设置 ==
 
@@ -240,7 +232,7 @@ $ nvcc -o cudahello cudahello.cu</pre></li>
 MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
 module load cuda/5.0
 
-./cudahello &gt;&amp; cudahello.log</pre></li></ol>
+./cudahello </pre></li></ol>
 
 提交到gpu队列：
 
