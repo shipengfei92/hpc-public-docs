@@ -107,63 +107,85 @@ do
 echo $host &gt;&gt; nodelist
 done
 
-$MPIRUN -np $NP -machinefile nodelist $EXE</pre>
+$MPIRUN -machinefile nodelist $EXE</pre>
 关于MPI程序和作业脚本的详细例子，请参考《并行程序示例》中的内容。
 
 = 查看和终止作业 =
 
 == 查看作业状态<code>bjobs</code> ==
 
-检查已提交的作业的运行状态：
+bjobs命令用户已提交，运行尚未结束的作业。
 
-<pre>bjobs</pre>
-以宽格式来显示作业运行状态：
+<pre>$ bjobs
+JOBID   USER    STAT  QUEUE      FROM_HOST   EXEC_HOST   JOB_NAME   SUBMIT_TIME
+36794   hpc-jia RUN   mic        mu05        16*mic01    HELLO_MPI  Dec  5 19:57
+                                             16*mic02</pre>
+使用<code>-l</code>参数，可以查看某个作业的相信信息：
 
-<pre>bjobs -w</pre>
-显示所有作业：
+<pre>$ bjobs -l 36795 
 
-<pre>bjobs -a</pre>
-显示正在运行的作业：
+Job &lt;36795&gt;, Job Name &lt;HELLO_MPI&gt;, User &lt;hpc-jianwen&gt;, Project &lt;default&gt;, Statu
+                     s &lt;DONE&gt;, Queue &lt;mic&gt;, Command &lt;#BSUB -q mic;#BSUB -J HELL
+                     O_MPI;#BSUB -L /bin/bash;#BSUB -o job.out;#BSUB -e job.err
+... 
+ SCHEDULING PARAMETERS:
+           r15s   r1m  r15m   ut      pg    io   ls    it    tmp    swp    mem
+ loadSched   -    0.8    -     -       -     -    -     -     -      -      -  
+ loadStop    -    2.5    -     -       -     -    -     -     -      -      -</pre>
+关于bjobs的详细用法，可参考帮助文档
 
-<pre>bjobs -r</pre>
-显示等待运行(pending)的作业和等待的原因：
+<pre>$ bjobs -h</pre>
+== 中止作业<code>bkill</code> ==
 
-<pre>bjobs -p</pre>
-显示已经挂起(suspending)的作业和挂起的原因：
+bkill用于中止作业，格式为：
 
-<pre>bjobs -s</pre>
-显示<code>JOBID</code>这个作业的所有信息：
+<pre>$ bkill JOBID</pre>
+JOBID可以从bjobs命令中查看。
 
-<pre>bjobs -l JOBID</pre>
-== 终止作业<code>bkill</code> ==
+<!--
+查看作业输出```bpeek```
+-----
 
-终止不需要的作业：
+当作业正在运行时，使用
 
-<pre>bkill</pre>
-终止<code>JOBID</code>这个作业：
+    bpeek
 
-<pre>bkill JOBID</pre>
-直接将作业<code>JOBID</code>从LSF中移除，而不等待该作业的进程在操作系统中终结：
+查看```JOBID```的标准输出：
 
-<pre>bikill JOBID</pre>
-== 监视作业输出<code>bpeek</code> ==
+    bpeek JOBID
+-->
 
-当作业正在运行时，显示它的标准输出，监视作业运行：
-
-<pre>bpeek</pre>
-查看<code>JOBID</code>的标准输出：
-
-<pre>bpeek JOBID</pre>
 == 作业历史信息<code>bhist</code> ==
 
-显示作业的历史情况：
+bhist可以显示已提交作业的详细信息，包括提交参数、运行状态等。
 
-<pre>bhist</pre>
-显示<code>JOBID</code>作业的历史情况：
+<pre>$ bhist JOBID</pre>
+使用参数<code>-l</code>可以显示详细信息，譬如：
 
-<pre>bhist JOBID</pre>
-= 错误排查 =
+<pre>$ bhist -l 36797
 
-= 问题诊断 =
+Job &lt;36797&gt;, Job Name &lt;HELLO_MPI&gt;, User &lt;hpc-jianwen&gt;, Project &lt;default&gt;, Comma
+                     nd &lt;#BSUB -q mic;#BSUB -J HELLO_MPI;#BSUB -L /bin/bash;#BS
+...
+Summary of time in seconds spent in various states by  Thu Dec  5 20:12:23
+  PEND     PSUSP    RUN      USUSP    SSUSP    UNKWN    TOTAL
+  2        0        6        0        0        0        8 </pre>
+= 常见错误 =
+
+== 使用脚本提交作业后，返回错误信息“xxx command not found” ==
+
+作业脚本如果使用了Windows的换行符，bsub在读入时可能会导致这样的问题。建议将作业脚本转换为UNIX换行符，再重新提交。
+
+<pre>$ dos2nix job.script</pre>
+= 问题反馈 =
+
+如果作业在提交和运行时仍有异常，请和[[sjtuhpc-sysadmin@googlegroups.com|管理员]]联系。请在邮件中附上如下信息，这将帮助我们更快地解决问题：
+
+* 你的HPC帐号；
+* 出现问题的JOB ID；
+* 提交作业所用的LSF脚本；
+* 看到的错误信息和异常；
 
 = 参考资料 =
+
+* “Using Platform LFS” http://support.sas.com/rnd/scalability/platform/PSS6.1/lsf7.06_hpc_using.pdf
