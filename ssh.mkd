@@ -181,10 +181,32 @@ Mac系统可以自动记住这个口令，使用很方便；Linux/UNIX用户可�
 如果以上的自查步骤仍无法帮助您解决登录问题，请和[管理员](sjtuhpc-sysadmin@googlegroups.com)联系，并将以上的自查结果以及您的用户名附在邮件中。
 *建议您直接将自查程序的运行结果以文本复制到邮件中，“截图”不便于转发和问题追溯，请尽量不要使用。*
 
-参考资料
+在本地显示远端应用程序界面 SSH X11 Forward
+=======
+
+远端服务器上的图形界面应用程序，还可以通过SSH隧道"投射"到本地计算机上，这个过程称为SSH X11 Forward。
+
+要使用SSH X11 Forward，本地计算机需要启动X Server。
+使用图形界面的Linux操作系统默认就启动了X Server，Mac OS X用户可以安装[XQuartz](http://xquartz.macosforge.org/)，
+Windows用户可以安装[Xmanager](http://www.netsarang.com/products/xmg_overview.html)。
+
+在建立SSH连接时，加上```-X```参数表示启用X11 Forward：
+
+	$ ssh -X YOUR_USERNAME@202.120.58.229
+
+登录到远端服务器后，可以尝试启动一些图形用户界面程序。
+如果配置正确，在本地计算机上会弹出应用程序窗口。
+在X11 Forward环境中，操作远端应用程序和操作本地应用程序的感觉是一样的，非常方便。
+
+	$ xclock
+	$ gnome-about
+
+参考资料 {-}
 ======
 * "UNIX Tutorial for Beginners" <http://www.ee.surrey.ac.uk/Teaching/Unix/>
 * "鸟哥的Linux私房菜：SSH服务器" <http://vbird.dic.ksu.edu.tw/linux_server/0310telnetssh.php#ssh_server>
 * "Simplify Your Life With an SSH Config File" <http://nerderati.com/2011/03/simplify-your-life-with-an-ssh-config-file/>
 * "keychain: Set Up Secure Passwordless SSH Access For Backup Scripts" <http://www.cyberciti.biz/faq/ssh-passwordless-login-with-keychain-for-scripts/>
 * "使用putty密码远程登录OpenSSH" <http://www.linuxfly.org/post/175/>
+ 
+

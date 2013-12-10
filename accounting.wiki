@@ -1,0 +1,113 @@
+This document shows you how to how to check your CPU time usage on Pi and how to get a detailed view of historic status of you submitted jobs.
+
+= Check CPU time usage with <code>bacct</code> =
+
+LSF command <code>bacct</code> is used to check the CPU time consumed by finished jobs. Please notice that ''as baccount calculates the CPU time only for finished jobs, that for running ones is not included''. So the baccnt result is for reference only. The accurate CPU time usage would be the ones displayed on the monthly bills send to you.
+
+<pre>$ bacct -h
+Usage:  bacct  [-h] [-V] [-b] [-l] [-w] [-d] [-e] [-x] [-f logfile]
+               [-u 'userlist' | -u all ]  [-m 'machinelist'] [-M hostlistfile]
+               [-q 'queuelist'] [-C time0,time1] [-N host_spec]
+               [-S time0,time1] [-D time0,time1]
+               [-P 'projectlist'] [-Lp 'licenseProjectList']
+               [-U 'reservation ID list' | -U all ]
+               [-app applicationProfileList]
+               [-sla 'serviceClasslist'] [jobId | &quot;jobId[index]&quot; ...]</pre>
+By default, <code>bacct</code> will diplay the total CPU time consumed on all compute queues. Please notice that ''the time units displayed in bacct is seconds.''.
+
+<pre>$ bacct
+Accounting information about jobs that are:
+  - submitted by users xxx-xxxxx,
+  - accounted on all projects.
+  - completed normally or exited
+  - executed on all hosts.
+  - submitted to all queues.
+  - accounted on all service classes.
+------------------------------------------------------------------------------
+
+SUMMARY:      ( time unit: second )
+ Total number of done jobs:      66      Total number of exited jobs:    26
+ Total CPU time consumed:   10260.4      Average CPU time consumed:   111.5
+ Maximum CPU time of a job:  1813.4      Minimum CPU time of a job:     0.0
+ Total wait time in queues: 158519.0
+ Average wait time in queue: 1723.0
+ Maximum wait time in queue:53149.0      Minimum wait time in queue:    2.0
+ Average turnaround time:      1783 (seconds/job)
+ Maximum turnaround time:     53164      Minimum turnaround time:         7
+ Average hog factor of a job:  5.15 ( cpu time / turnaround time )
+ Maximum hog factor of a job:  86.35      Minimum hog factor of a job:  0.00
+ Total throughput:             0.04 (jobs/hour)  during 2398.04 hours
+ Beginning time:       Sep  9 21:47      Ending time:          Dec 18 19:49 </pre>
+To check the CPU time usage consumed by the finished jobs which were submitted from Apr 1, 2013 to Nov 15, 2013, the option <code>-S</code> is helpful.
+
+<pre>$ bacct -S 2013/04/01/00:00,2013/11/15/23:59</pre>
+And option `<code>-q</code> is used to specify a compute queue, on which the time is queried.
+
+<pre>$ bacct -q cpu</pre>
+Or query on multiple queues
+
+<pre>$ bacct -q &quot;cpu gpu&quot;</pre>
+Given a job ID, bacct can display CPU time consumed on this job. Here the job with ID 100879 is taken as an exmaple. Option <code>-l</code> is used to display ''long'' detailed information.
+
+<pre>$ bacct 100879</pre>
+= Review job process with <code>bhist</code> =
+
+LSF command <code>bhist</code> is used to review or check the running status of jobs.
+
+<pre>$ bhist -h
+Usage: bhist [-l] [-b] [-w] [-a] [-d] [-e] [-p] [-s] [-r]
+             [-f logfile_name | -n num_logfiles | -n min_logfile, max_logfile]
+             [-C time0,time1] [-S time0,time1] [-D time0,time1]
+             [-N host_spec] [-P project_name]  [-Lp license_project]
+             [-q queue_name] [-G usergroup_name] [-m &quot;host_name ...&quot;] [-J job_name] [-Jd job_description]
+             [-u user_name | -u all] [jobId | &quot;jobId[index]&quot; ...]
+       bhist -t [-f logfile_name] [-T time0,time1]
+       bhist [-h] [-V]</pre>
+By default, bhist will show only ''pending, running and suspended'' job information during the past week. So more options are required to display the historical information of finished jobs.
+
+The following command displays long (detailed) information about all jobs, which were submitted during 2013-04-01 and 2013-05-01. <code>-n 100</code> is commonly used option, which forces bhist to search more log files, up to 100.
+
+<pre>$ bhist -a -S 2013/04/01/00:00,2013/05/01/23:59 -n 100  </pre>
+Option <code>-l</code> will make the output more detailed.
+
+<pre>$ bhist -a -l -S 2013/04/01/00:00,2013/12/01/23:59 -n 100  </pre>
+If the job ID is given, only this specific job’s information will be displayed.
+
+<pre>$ bhist -a -l -S 2013/04/01/00:00,2013/05/01/23:59 -n 100 345189
+Job &lt;345189&gt;, Job Name &lt;HELLO_MPI_256&gt;, User &lt;xxx-xxxxxx&gt;, Project &lt;default&gt;, C
+                     ommand &lt;#BSUB -q cpu;#BSUB -J HELLO_MPI_256;#BSUB -L /bin/
+                     bash;#BSUB -o job.out;#BSUB -e job.err;#BSUB -n 512;   MOD
+                     ULEPATH=/lustre/utility/modulefiles:$MODULEPATH;module loa
+                     d icc/13.1.1;module load impi/4.1.1.036; MPIRUN=`which mpi
+                     run`;EXE=&quot;./mpihello&quot;; cat /dev/null &gt; nodelist; for host
+                     in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn
+                     /g'`;do;echo $host &gt;&gt; nodelist;done; $MPIRUN -machinefile
+                     nodelist $EXE&gt;
+Wed Dec 18 19:49:18: Submitted from host &lt;mu05&gt;, to Queue &lt;cpu&gt;, CWD &lt;$HOME/wor
+                     kspace/example-repo/mpi/hello&gt;, Output File &lt;job.out&gt;, Err
+                     or File &lt;job.err&gt;, Re-runnable, Checkpoint period 10 minut
+                     e(s), Checkpoint directory &lt;/tmp/39086&gt;, 512 Processors Re
+                     quested, Login Shell &lt;/bin/bash&gt;;
+Wed Dec 18 19:49:40: Dispatched to 512 Hosts/Processors &lt;16*node054&gt; &lt;16*node20
+                     1&gt; &lt;16*node202&gt; &lt;16*node008&gt; &lt;16*node067&gt; &lt;6*node297&gt; &lt;16*
+                     node306&gt; &lt;16*node072&gt; &lt;13*node292&gt; &lt;16*node308&gt; &lt;16*node27
+                     9&gt; &lt;16*node324&gt; &lt;16*node115&gt; &lt;16*node043&gt; &lt;16*node026&gt; &lt;16
+                     *node312&gt; &lt;16*node164&gt; &lt;16*node182&gt; &lt;16*node174&gt; &lt;16*node0
+                     90&gt; &lt;16*node301&gt; &lt;16*node023&gt; &lt;16*node124&gt; &lt;16*node151&gt; &lt;1
+                     6*node168&gt; &lt;16*node167&gt; &lt;16*node166&gt; &lt;15*node295&gt; &lt;13*node
+                     103&gt; &lt;13*node219&gt; &lt;14*node328&gt; &lt;12*node138&gt; &lt;11*node258&gt; &lt;
+                     13*node092&gt; &lt;1*node303&gt; &lt;1*node027&gt;;
+Wed Dec 18 19:49:40: Starting (Pid 54488);
+Wed Dec 18 19:49:40: Running with execution home &lt;/lustre/home/xxx-xxxxx&gt;, Ex
+                     ecution CWD &lt;/lustre/home/xxx-xxxxx/workspace/example-re
+                     po/mpi/hello&gt;, Execution Pid &lt;54488&gt;;
+Wed Dec 18 19:49:54: Done successfully. The CPU time used is 604.9 seconds;
+Wed Dec 18 19:49:54: Post job process done successfully;
+
+Summary of time in seconds spent in various states by  Wed Dec 18 19:49:54
+  PEND     PSUSP    RUN      USUSP    SSUSP    UNKWN    TOTAL
+  22       0        14       0        0        0        36</pre>
+= Reference =
+
+* “LSF Manual: bacct” http://www.cisl.ucar.edu/docs/LSF/7.0.3/command_reference/bacct.cmdref.html
+* “LSF Manual: bhist” http://www.cisl.ucar.edu/docs/LSF/7.0.3/command_reference/bhist.cmdref.html
