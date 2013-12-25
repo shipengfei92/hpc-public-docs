@@ -209,3 +209,4 @@ Windows用户可以安装[Xmanager](http://www.netsarang.com/products/xmg_overvi
 * "keychain: Set Up Secure Passwordless SSH Access For Backup Scripts" <http://www.cyberciti.biz/faq/ssh-passwordless-login-with-keychain-for-scripts/>
 * "使用putty密码远程登录OpenSSH" <http://www.linuxfly.org/post/175/>
  
+
