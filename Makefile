@@ -6,10 +6,9 @@ vpath %.cls tex
 vpath %.cfg tex
 vpath %.latex pandoc
 
-SRC = $(wildcard *.mkd)
-SRC_NAME = $(SRC:%.mkd=)
-OUT_PDF = $(SRC:%.mkd=%.pdf) 
-OUT_WIKI = $(SRC:%.mkd=%.wiki) 
+SRC_MKD = $(shell cd mkd; ls *.mkd)
+OUT_PDF = $(SRC_MKD:%.mkd=%.pdf) 
+OUT_WIKI = $(SRC_MKD:%.mkd=%.wiki) 
 
 # Document Class
 DOCCLASS := hpcmanual
@@ -22,32 +21,32 @@ REPOURL = https://raw.github.com/weijianwen/hpc-manual-class/master/pandoc
 # pdf viewer: evince/open
 VIEWER = open
 
-.PHONY : all clean cleanall release
+.PHONY : all clean cleanall release hello
 .PRECIOUS : %.tex
 
 all: $(OUT_PDF) $(OUT_WIKI)
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
-	-@cd tex; latexmk $(LATEX_OPT) $*
+	-cd tex; latexmk $(LATEX_OPT) $*
 
 %.wiki : %.mkd Makefile
-	@pandoc $(PANDOC_WIKI_OPT) mkd/$*.mkd -o wiki/$@
+	pandoc $(PANDOC_WIKI_OPT) mkd/$*.mkd -o wiki/$@
 
 %.tex : $(DOCCLASS).latex %.mkd Makefile
-	@pandoc $(PANDOC_TEX_OPT) mkd/$*.mkd -o tex/$@
+	pandoc $(PANDOC_TEX_OPT) mkd/$*.mkd -o tex/$@
 
 clean :
-	-@cd pdf; rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
-	-@cd tex; rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
+	-cd pdf; rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
+	-cd tex; rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
 
 update :
-	@wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls
-	@wget -q $(REPOURL)/$(DOCCLASS).cfg -O tex/$(DOCCLASS).cfg
-	@wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
+	wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls
+	wget -q $(REPOURL)/$(DOCCLASS).cfg -O tex/$(DOCCLASS).cfg
+	wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
 
 cleanall : clean
-	-@cd wiki; rm $(OUT_WIKI)
-	-@cd pdf; rm $(OUT_PDF)
+	-cd wiki; rm -f $(OUT_WIKI)
+	-cd pdf; rm -f $(OUT_PDF)
 
 release :
 	git push gitlab
