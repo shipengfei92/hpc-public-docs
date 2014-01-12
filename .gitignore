@@ -1,7 +1,4 @@
 .DS_Store
-*.cfg
-*.cls
-*.latex
 *.tex
 *.bak
 *.fls

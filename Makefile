@@ -37,8 +37,8 @@ all: $(OUT_PDF) $(OUT_WIKI)
 	@pandoc $(PANDOC_TEX_OPT) mkd/$*.mkd -o tex/$@
 
 clean :
-	-@cd pdf; rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out *.cfg *.latex *.log
-	-@cd tex; rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out *.cfg *.latex *.log
+	-@cd pdf; rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
+	-@cd tex; rm *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
 
 update :
 	@wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls
@@ -46,7 +46,8 @@ update :
 	@wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
 
 distclean : clean
-	-@rm $(OUT_WIKI) $(OUT_PDF)
+	-@cd wiki; rm $(OUT_WIKI)
+	-@cd pdf; rm $(OUT_PDF)
 
 release :
 	git push gitlab
