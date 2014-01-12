@@ -22,7 +22,7 @@ REPOURL = https://raw.github.com/weijianwen/hpc-manual-class/master/pandoc
 # pdf viewer: evince/open
 VIEWER = open
 
-.PHONY : all clean distclean release
+.PHONY : all clean cleanall release
 .PRECIOUS : %.tex
 
 all: $(OUT_PDF) $(OUT_WIKI)
@@ -45,7 +45,7 @@ update :
 	@wget -q $(REPOURL)/$(DOCCLASS).cfg -O tex/$(DOCCLASS).cfg
 	@wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
 
-distclean : clean
+cleanall : clean
 	-@cd wiki; rm $(OUT_WIKI)
 	-@cd pdf; rm $(OUT_PDF)
 
