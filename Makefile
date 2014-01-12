@@ -21,15 +21,19 @@ REPOURL = https://raw.github.com/weijianwen/hpc-manual-class/master/pandoc
 # pdf viewer: evince/open
 VIEWER = open
 
-.PHONY : all clean cleanall release hello
+all: pdf wiki
+
+.PHONY : all clean cleanall release pdf wiki
 .PRECIOUS : %.tex
 
-all: $(OUT_PDF) $(OUT_WIKI)
+pdf : $(OUT_PDF)
 
-%.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
+wiki : $(OUT_WIKI)
+
+$(OUT_PDF) : %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
 	-cd tex && latexmk $(LATEX_OPT) $*
 
-%.wiki : %.mkd Makefile
+$(OUT_WIKI) : %.wiki : %.mkd Makefile
 	pandoc $(PANDOC_WIKI_OPT) mkd/$*.mkd -o wiki/$@
 
 %.tex : $(DOCCLASS).latex %.mkd Makefile
