@@ -24,7 +24,6 @@ VIEWER = open
 all: pdf wiki
 
 .PHONY : all clean cleanall release pdf wiki
-.PRECIOUS : %.tex
 
 pdf : $(OUT_PDF)
 
