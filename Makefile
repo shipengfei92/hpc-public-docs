@@ -6,7 +6,7 @@ vpath %.cls tex
 vpath %.cfg tex
 vpath %.latex pandoc
 
-SRC_MKD = $(shell cd mkd; ls *.mkd)
+SRC_MKD = $(shell cd mkd && ls *.mkd)
 OUT_PDF = $(SRC_MKD:%.mkd=%.pdf) 
 OUT_WIKI = $(SRC_MKD:%.mkd=%.wiki) 
 
@@ -27,7 +27,7 @@ VIEWER = open
 all: $(OUT_PDF) $(OUT_WIKI)
 
 %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
-	-cd tex; latexmk $(LATEX_OPT) $*
+	-cd tex && latexmk $(LATEX_OPT) $*
 
 %.wiki : %.mkd Makefile
 	pandoc $(PANDOC_WIKI_OPT) mkd/$*.mkd -o wiki/$@
@@ -36,8 +36,8 @@ all: $(OUT_PDF) $(OUT_WIKI)
 	pandoc $(PANDOC_TEX_OPT) mkd/$*.mkd -o tex/$@
 
 clean :
-	-cd pdf; rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
-	-cd tex; rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
+	-cd pdf && rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
+	-cd tex && rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
 
 update :
 	wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls
@@ -45,8 +45,8 @@ update :
 	wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
 
 cleanall : clean
-	-cd wiki; rm -f $(OUT_WIKI)
-	-cd pdf; rm -f $(OUT_PDF)
+	-cd wiki && rm -f $(OUT_WIKI)
+	-cd pdf && rm -f $(OUT_PDF)
 
 release :
 	git push gitlab
