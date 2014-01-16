@@ -51,6 +51,6 @@ cleanall : clean
 	-cd wiki && rm -f $(OUT_WIKI)
 	-cd pdf && rm -f $(OUT_PDF)
 
-release :
+git :
 	git push gitlab
 	git push github
