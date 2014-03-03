@@ -1,12 +1,12 @@
-作业管理系统是高性能计算机的“指挥部”， 它接收用户的作业请求，将作业分配到合适的节点上运行，最后将各节点的计算结果汇总给用户。 作业管理系统能够提高计算资源的利用率、降低集群维护难度， 因此高性能计算系统大都配备了作业管理系统。
+作业管理系统是高性能计算机的“指挥部”， 它接受用户的作业请求，将作业分配到合适的节点上运行，最后将各节点的计算结果汇总给用户。 作业管理系统能够提高计算资源的利用率、降低集群维护难度， 因此高性能计算系统大都配备了作业管理系统。
 
-IBM Platform LSF是一个被广泛使用的作业管理系统，具有高吞吐、配置灵活的优点。 上海交通大学Pi集群也使用了LSF作业管理系统。 这份文档将指导您通过LSF提交和管理高性能计算作业。
+IBM Platform LSF是一个被广泛使用的作业管理系统，具有高吞吐、配置灵活的优点。 上海交通大学π集群也使用了LSF作业管理系统。 这份文档将指导您通过LSF提交和管理高性能计算作业。
 
 遵循文档的操作规范和反馈方法，将帮助您顺利完成工作。也欢迎大家对文档内容[[sjtuhpc-sysadmin@googlegroups.com|提出建议]]，谢谢！
 
 = 查看计算队列<code>bqueues</code> =
 
-作业队列是一系列可用的计算资源池，不同的队列在软硬件配置上有侧重，适合不同性质的作业。 用户可以使用<code>bqueues</code>查看Pi集群可用的计算队列：
+作业队列是一系列可用的计算资源池，不同的队列在软硬件配置上有侧重，适合不同性质的作业。 用户可以使用<code>bqueues</code>查看π集群可用的计算队列：
 
 <pre>$ bqueues
 QUEUE_NAME      PRIO STATUS          MAX JL/U JL/P JL/H NJOBS  PEND   RUN  SUSP 
@@ -14,7 +14,7 @@ cpu              40  Open:Active       -    -    -    -  4135     0  4135     0
 fat              40  Open:Active       -    -    -    -    32     0    32     0
 gpu              40  Open:Active       -    -    -    -   560     0   560     0
 mic              40  Open:Active       -    -    -    -     0     0     0     0</pre>
-Pi集群可用的计算队列有四个，分别是<code>cpu</code>、<code>fat</code>、<code>gpu</code>和<code>mic</code>。 各队列的硬件配置简要说明如下：
+π集群可用的计算队列有四个，分别是<code>cpu</code>、<code>fat</code>、<code>gpu</code>和<code>mic</code>。 各队列的硬件配置简要说明如下：
 
 * cpu: 采用双路8核服务器，64GB内存，共332台服务器，合计5312个CPU核心、约21TB内存。这个队列容量大，适合处理大型计算任务。
 * fat: 采用双路8服务器，256GB内存，共20台服务器，合计320个CPU核心、约5TB内存。这个队列适合进行大内存计算。
@@ -40,16 +40,53 @@ Pi集群可用的计算队列有四个，分别是<code>cpu</code>、<code>fat</
 
 直接输入bsub完整参数，可以方便地提交单线程作业。 下面这条命令提交了一个需要一个CPU核运行的单线程作业：
 
-<pre>$ bsub -n 1 -q cpu -o job.out ./myprog &quot;-j 3&quot;</pre>
+<pre>$ bsub -n 1 -q cpu -o job.out ./myprog &quot;-input data.txt&quot;</pre>
 主要参数说明如下：
 
 * <code>-n</code>指定所需的计算核心数。
-* <code>-q</code>指定作业运行的队列，在Pi集群上可用的计算队列有cpu、fat、gpu和mic。
+* <code>-q</code>指定作业运行的队列，在π集群上可用的计算队列有cpu、fat、gpu和mic。
 * <code>-o</code>指定作业运行信息的输出文件。
 * <code>./myprog</code>是要提交运行的可执行文件，
-* <code>&quot;-j 3&quot;</code>是传递给myprog的命令行参数。
+* <code>&quot;-input data.txt&quot;</code>是传递给myprog的命令行参数。
 
-当然，这种用法仅适用于简单的作业，更复杂的作业控制需要编写作业脚本。
+当然，这种用法仅适用于简单的作业，更复杂的作业控制需要编写作业脚本，请参考下面“使用作业脚本提交”。
+
+== 使用作业提交脚本 ==
+
+作业脚本是带有“bsub格式”的纯文本文件。 作业脚本易于编辑和复用，是提交复杂作业的最佳形式。 下面是名为<code>job.script</code>的作业脚本的内容：
+
+<pre>#BSUB -n 4
+#BSUB -q cpu
+#BSUB -o job.out
+
+# input file is data.txt
+./mytest &quot;-input data.txt&quot;</pre>
+其中以<code>#BSUB</code>开头的行表示bsub作业参数，其他<code>#</code>开头的行为注释行，其他行为脚本运行内容。作业脚本的使用方法很简单，只需要把脚本内容通过标准输入重定向给busb：
+
+<pre>$ bsub &lt; job.script</pre>
+以上脚本等价于如下命令：
+
+<pre>$ bsub -n 1 -q cpu -o job.out ./mytest &quot;-input data.txt&quot;</pre>
+bsub默认会调用<code>/bin/sh</code>执行脚本内容，因此可以使用Shell编程脚本对作业参数进行处理和控制。 下面这个作业脚本提交了一个需要64核心的MPI计算任务。 在下面名为<code>64core.script</code>的作业脚本会由LSF使用bash解释运行，需要使用64个核心，且要求每个节点提供16个计算核心。
+
+<pre># 64core.script
+#BSUB -L /bin/bash
+#BSUB -J HELLO_MPI
+#BSUB -n 64
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R &quot;span[ptile=16]&quot;
+#BSUB -q cpu
+        
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module purge
+module load openmpi/gcc/1.6.5
+
+mpirun ./mpihello</pre>
+用户在命令行下用bsub提交作业：
+
+<pre>$ bsub &lt; 64core.script</pre>
+关于MPI程序和作业脚本的详细例子，请参考[http://pi.sjtu.edu.cn/docs/Codesample_ch 《并行程序示例》]中的内容。
 
 == 交互式提交 ==
 
@@ -68,48 +105,6 @@ bsub&gt; CTRL+d</pre>
 <pre>$ bsub -n 1 -q cpu -o job.out PROG1
 $ bsub -n 1 -q cpu -o job.out PROG2
 $ bsub -n 1 -q cpu -o job.out PROG3</pre>
-== 使用作业提交脚本 ==
-
-作业脚本是带有“bsub格式”的纯文本文件。 作业脚本易于编辑和复用，是提交复杂作业的最佳形式。 下面是名为<code>job.script</code>的作业脚本的内容：
-
-<pre>#=== Begin job.script ===#
-#BSUB -n 1
-#BSUB -q cpu
-#BSUB -o job.out
-
-./mytest &quot;-j 3&quot;
-#==== End job.script ===#</pre>
-其中以<code>#BSUB</code>开头的行表示bsub作业参数，其他<code>#</code>开头的行为注释行，其他行为脚本运行内容。作业脚本的使用方法很简单，只需要把脚本内容通过标准输入重定向给busb：
-
-<pre>$ bsub &lt; job.script</pre>
-以上脚本等价于如下命令：
-
-<pre>$ bsub -n 1 -q cpu -o job.out ./mytest &quot;-j 3&quot;</pre>
-bsub默认会调用<code>/bin/sh</code>执行脚本内容，因此可以使用Shell编程脚本对作业参数进行处理和控制。 下面这个作业脚本提交了一个需要64核心的MPI计算任务。 这个脚本先设置了一些作业运行参数，调用其他脚本让运行相关的环境变量生效，然后使用一小段Shell脚本从<code>$LSB_MCPU_HOSTS</code>环境变量中创建mpirun所需的nodelist，最后调用<code>mpirun</code>执行MPI并行作业。
-
-<pre>#BSUB -J HELLO_MPI
-#BUSB -q cpu
-#BSUB -o job.out
-#BSUB -e job.err
-#BSUB -n 64
-
-source /lustre/utility/intel/composer_xe_2014.3.163/bin/compilervars.sh intel64
-source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
-source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
-
-MPIRUN=`which mpirun`
-EXE=&quot;./mpihello&quot;
-
-cat /dev/null &gt; nodelist
-
-for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
-do
-echo $host &gt;&gt; nodelist
-done
-
-$MPIRUN -machinefile nodelist $EXE</pre>
-关于MPI程序和作业脚本的详细例子，请参考《并行程序示例》中的内容。
-
 = 查看和终止作业 =
 
 == 查看作业状态<code>bjobs</code> ==
@@ -142,19 +137,11 @@ bkill用于中止作业，格式为：
 <pre>$ bkill JOBID</pre>
 JOBID可以从bjobs命令中查看。
 
-<!--
-查看作业输出```bpeek```
------
+== 查看作业输出<code>bpeek</code> ==
 
-当作业正在运行时，使用
+当作业正在运行时，使用<code>bpeek</code>可以查看当前作业的输出。
 
-    bpeek
-
-查看```JOBID```的标准输出：
-
-    bpeek JOBID
--->
-
+<pre>$ bpeek JOBID</pre>
 == 作业历史信息<code>bhist</code> ==
 
 bhist可以显示已提交作业的详细信息，包括提交参数、运行状态等。
@@ -183,8 +170,7 @@ Summary of time in seconds spent in various states by  Thu Dec  5 20:12:23
 
 * 你的HPC帐号；
 * 出现问题的JOB ID；
-* 提交作业所用的LSF脚本；
-* 看到的错误信息和异常；
+* 提交作业所用的LSF脚本、作业的日志文件(通常名为<code>job.out</code>)、作业的错误(通常名为<code>job.err</code>)；
 
 = 参考资料 =
 

@@ -1,12 +1,96 @@
+本文档介绍如何在π超级计算机上编译和提交并行作业任务。 π支持OpenMP、MPI、CUDA等并行编程模型。 再继续阅读本文档之前，您应该知道如何登录π、使用LSF提交作业、Module的基本概念。 下面几个文档可以帮助您完成准备工作：
+
+* 使用SSH登录高性能计算节点 http://pi.sjtu.edu.cn/docs/SSH_ch
+* LSF作业管理系统使用方法 http://pi.sjtu.edu.cn/docs/LSF_ch
+* 使用Environment Module设置运行环境 http://pi.sjtu.edu.cn/docs/Module_ch
+
+本文档的所有示例代码均收录在登录节点<code>/lustre/utility/pi-code-sample</code>目录下。
+
 = OpenMP示例 =
 
+Pi集群上GCC和Intel编译器都支持OpenMP扩展。 示例代码<code>omp_hello.c</code>内容如下：
+
+<pre>#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main (int argc, char *argv[])
+{
+int nthreads, tid;
+
+/* Fork a team of threads giving them their own copies of variables */
+#pragma omp parallel private(nthreads, tid)
+  {
+
+  /* Obtain thread number */
+  tid = omp_get_thread_num();
+  printf(&quot;Hello World from thread = %d\n&quot;, tid);
+
+  /* Only master thread does this */
+  if (tid == 0)
+    {
+    nthreads = omp_get_num_threads();
+    printf(&quot;Number of threads = %d\n&quot;, nthreads);
+    }
+
+  }  /* All threads join master thread and disband */
+
+}</pre>
+== 使用GCC编译器 ==
+
+GCC编译OpenMP代码时加上<code>-fopenmp</code>：
+
+<pre>$ gcc -fopenmp omp_hello.c -o ompgcc</pre>
+在本地使用4线程运行程序：
+
+<pre>$ export OMP_NUM_THREADS=4 &amp;&amp; ./ompgcc</pre>
+正式运行时需要提交到LSF作业管理系统，提交脚本<code>ompgcc.lsf</code>如下，仍使用4线程运行(增加约束条件让所有线程分配到一台物理机上)：
+
+<pre>#BSUB -L /bin/bash
+#BSUB -J HELLO_OpenMP
+#BSUB -n 4
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R &quot;span[hosts=1]&quot;
+#BSUB -q cpu
+
+export OMP_NUM_THREADS=4
+./ompgcc</pre>
+提交到LSF：
+
+<pre>$ bsub &lt; ompgcc.lsf</pre>
+== 使用Intel编译器 ==
+
+Intel编译器<code>icc</code>编译OpenMP代码时需要使用<code>-openmp</code>参数。
+
+<pre>$ module purge &amp;&amp; module load icc/13.1.1 &amp;&amp; icc -openmp omp_hello.c -o ompintel</pre>
+在本地使用4线程运行：
+
+<pre>$ module purge &amp;&amp; module load icc/13.1.1/ &amp;&amp; export OMP_NUM_THREADS=4 &amp;&amp; ompintel</pre>
+LSF作业脚本<code>ompintel.lsf</code>内容如下：
+
+<pre>#BSUB -L /bin/bash
+#BSUB -J HELLO_OpenMP
+#BSUB -n 4
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R &quot;span[hosts=1]&quot;
+#BSUB -q cpu
+
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module purge
+module load icc/13.1.1
+
+export OMP_NUM_THREADS=4
+./ompintel</pre>
+提交到LSF：
+
+<pre>bsub &lt; ompintel.lsf &amp;&amp; bjobs</pre>
 = MPI示例 =
 
-这部分演示如何使用Intel编译器编译一个名为<code>mpihello</code>的MPI程序，然后在本地测试运行，最后向LSF作业管理系统提交正式作业。 使用Environment Module可以简化环境参数设定，我们也会给出使用module的过程。
+MPI (Message Passing Interface)是并行计算中使用非常广泛的编程接口。 它定义了一组标准的进程间消息传递接口，进程可以在同一节点或跨节点进行消息通信。 软硬件厂商可以在保证MPI接口相容的前提下，设计自己的实现。 π超级计算机上支持的MPI实现包括Intel MPI、MPICH2、OpenMPI、MVAPCH2等，用户调用不同的Module即可在不同的MPI实现间切换。 用户在登录节点上选择需要的MPI环境，编译程序后提交给LSF作业管理系统。 如果从原有的MPI实现切换到另一个MPI实现，MPI程序需要重新编译。
 
-== 编译源代码 ==
-
-<code>mpihello</code>程序的源文件为<code>mpihello.c</code>，内容如下：
+本节演示如何在不同的MPI环境下编译和运行名为<code>mpihello</code>的MPI程序。 程序源代码<code>mpihello.c</code>内容如下：
 
 <pre>#include &lt;mpi.h&gt;
 #include &lt;stdio.h&gt;
@@ -53,97 +137,67 @@ int main(int argc, char *argv[])
     MPI_Finalize();
     return 0;
 }</pre>
-我们使用Intel MPI并行开发环境提供的<code>mpiicc</code>对其编译, <code>mpiicc</code>会自动调用后端编译器<code>icc</code>。 使用icc前需要运行脚本使环境变量生效。
+== 将OpenMPI+GCC编译的程序提交到LSF ==
 
-<pre>$ source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
-$ source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
-$ source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh
-$ mpicc -o mpihello mpihello.c</pre>
-== 使用<code>mpirun</code>在本地测试运行 ==
+我们先尝试使用OpenMPI并行库和GCC编译器后端来构建程序：
 
-测试运行需要准备<code>machinefile</code>，这个文件用来指定程序运行的主机。 我们仅在本机做测试运行，因此machinefile内容只有<code>localhost</code>。
+<pre>$ module purge &amp;&amp; module load openmpi/gcc/1.6.5 &amp;&amp; mpicc mpi_hello.c -o hello_openmpi </pre>
+为了验证程序的正确性，可先在登录节点上做小规模并行测试。''注意：在登录节点上做并行测试，并行的核数请勿超过4核，执行时间不能超过15分钟。''
 
-<pre>$ echo &quot;localhost&quot; &gt; machinefile.txt</pre>
-<code>mpirun</code>用于启动MPI并行程序。 下面的命令启动<code>mpihello</code>并行程序，分配4个线程。 ''注意：在<math>\pi</math>集群中，<code>mpirun</code>只能用作小于4线程的测试，大规模正式作业必须提交到LSF。''
+测试运行需要准备<code>hosts.txt</code>，这个文件用来指定程序运行的主机。 我们仅在本机做测试运行，因此machinefile内容只有<code>localhost</code>。
 
-<pre>$ mpirun -np 4 -machinefile machinefile.txt ./mpihello
-Rank 0 of 4 has pid 90037 on mu05
-Rank 1 of 4 has pid 90038 on mu05
-Rank 2 of 4 has pid 90039 on mu05
-Rank 3 of 4 has pid 90040 on mu05</pre>
-== 提交到LSF作业管理系统 ==
+<pre>$ echo &quot;localhost&quot; &gt; hosts.txt</pre>
+<code>mpirun</code>用于启动MPI并行程序。 下面的命令启动<code>mpihello</code>并行程序，分配4个线程。
 
-大规模正式作业必须提交到LSF作业管理系统。<br />提交的作业由LSF作业管理系统统一调度运行，用户不需要手动书写<code>machinefile</code>。 作业控制脚本<code>mpihello.lsf</code>内容如下：
+<pre>$ module purge &amp;&amp; module load openmpi/gcc/1.6.5 &amp;&amp; mpirun -np 4 -machinefile hosts.txt ./mpihello</pre>
+下面这个作业脚本<code>hello_openmpi.lsf</code>用于向LSF正式提交作业。 脚本申请32线程，分配到2个节点上运行：
 
-<pre>#BSUB -J HELLO_MPI
-#BSUB -o job.out
-#BSUB -e job.err
-#BSUB -n 256
-        
-source /lustre/utility/intel/composer_xe_2013.3.163/bin/compilervars.sh intel64
-source /lustre/utility/intel/mkl/bin/intel64/mklvars_intel64.sh
-source /lustre/utility/intel/impi/4.1.1.036/bin64/mpivars.sh    
-
-MPIRUN=`which mpirun`
-EXE=&quot;./mpihello&quot;
-
-cat /dev/null &gt; nodelist
-
-for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
-do
-echo $host &gt;&gt; nodelist
-done
-
-$MPIRUNP -machinefile nodelist $EXE</pre>
-将作业提交到名为<code>cpu</code>的队列上：
-
-<pre>$ bsub -q cpu &lt; mpihello.lsf</pre>
-作业运行结束后，在工作目录下前查看输出结果<code>job.out</code>、<code>job.err</code>。
-
-== 使用module简化环境设置 ==
-
-使用Environment Module可以简化环境变量的书写，过程如下。
-
-<ol style="list-style-type: decimal;">
-<li><p>编译源程序。</p>
-<pre>$ module load icc/13.1.1
-$ module load mkl/11.0.3
-$ module load impi/4.1.1.036
-$ mpiicc -o mpihello mpihello.c </pre></li>
-<li><p>在本地测试运行。</p>
-<pre>$ mpirun -np 4 ./mpihello</pre></li>
-<li><p>提交到LSF作业管理系统，所用的作业控制脚本如下。''注意，增加了<code>BSUB -L</code>、<code>MODULEPATH</code>、<code>module</code>若干行。''</p>
-<pre>#BSUB -J HELLO_MPI
-#BSUB -L /bin/bash
-#BSUB -o job.out
-#BSUB -e job.err
-#BSUB -n 256
+<pre>#BSUB -L /bin/bash
+#BSUB -J HELLO_MPI
+#BSUB -n 32
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R &quot;span[ptile=16]&quot;
+#BSUB -q cpu
 
 MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module purge
+module load openmpi/gcc/1.6.5
+
+mpirun ./hello_openmpi</pre>
+提交作业，作业运行结束后可查看out和err文件的内容。
+
+<pre>$ bsub &lt; hello_openmpi.lsf &amp;&amp; bjobs</pre>
+== 将Intel MPI套件编译的程序提交到LSF ==
+
+用户也可以使用Intel MPI库和Intel编译器构建应用。 注意，要调用<code>icc</code>而非gcc作为后端编译器，必须使用<code>mpiicc</code>。
+
+<pre>$ module purge &amp;&amp; module load icc/13.1.1 impi/4.1.1.036 &amp;&amp; mpiicc hello_mpi.c -o hello_intel</pre>
+在本地使用4线程测试运行， <code>hosts.txt</code>文件只有一行内容：<code>localhost</code>。
+
+<pre>$ module purge &amp;&amp; module load icc/13.1.1 impi/4.1.1.036 &amp;&amp; mpirun -np 4 -machinefile hosts.txt ./hello_intel</pre>
+用于正式作业提交的LSF脚本<code>hello_intel.lsf</code>如下，使用了2个节点共32线程：
+
+<pre>#BSUB -q cpu
+#BSUB -J HELLO_MPI
+#BSUB -L /bin/bash
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -n 32
+#BSUB -R &quot;span[ptile=16]&quot;
+
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module purge
 module load icc/13.1.1
-module load mkl/11.0.3
 module load impi/4.1.1.036
 
-MPIRUN=`which mpirun`
-EXE=&quot;./mpihello&quot;
+mpiexec.hydra ./hello_intel</pre>
+提交作业，等待结果：
 
-cat /dev/null &gt; nodelist
-
-for host in `echo $LSB_MCPU_HOSTS |sed -e 's/ /:/g'|  sed 's/:n/\nn/g'`
-do
-echo $host &gt;&gt; nodelist
-done
-
-$MPIRUN -machinefile nodelist $EXE</pre></li></ol>
-
-提交作业：
-
-<pre>    $ busb -q cpu &lt; mpihelllo.lsf</pre>
+<pre>$ bsub &lt; hello_intel.lsf &amp;&amp; bjobs</pre>
 = CUDA示例 =
 
 这部分演示如何编译NVIDIA CUDA程序，并提交到LSF的gpu队列中运行。 ''注意：登录节点只有CUDA软件开发环境，没有CUDA硬件加速卡，因而不能在登录节点执行CUDA应用程序，必须把作业提交到LSF的gpu队列运行。''
-
-== 编译源代码 ==
 
 示例的CUDA源程序名为<code>cudahello.cu</code>，内容如下：
 
@@ -184,59 +238,26 @@ int main()
  printf(&quot;%s\n&quot;, a);
  return EXIT_SUCCESS;
 }</pre>
-我们使用NVIDIA CUDA SDK提供的<code>nvcc</code>对其编译。 使用<code>nvcc</code>前需要设置一些环境变量。
+我们使用NVIDIA CUDA SDK提供的<code>nvcc</code>编译这段代码。
 
-<pre>$ export PATH=/lustre/utility/cuda-5.0/bin/:$PATH
-$ export C_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$C_INCLUDE_PATH
-$ export CPLUS_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$CPLUS_INCLUDE_PATH
-$ export LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LIBRARY_PATH
-$ export LD_LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LD_LIBRARY_PATH
-$ nvcc -o cudahello cudahello.cu</pre>
-== 提交到LSF作业系统的gpu队列运行 ==
+<pre>module purge &amp;&amp; module load cuda/5.5 &amp;&amp; nvcc cudahello.cu -o cudahello</pre>
+由于登录节点没有安装CUDA加速卡，因此不能运行CUDA程序。 CUDA程序必须提交到LSF作业管理系统的gpu队列运行。 由于LSF对GPU卡的资源管理不够完善，因此指定资源时需要“折算”成相应的CPU数量。 譬如，某个计算任务需要使用2块GPU卡(1个GPU节点有2块GPU卡)，则在作业脚本中应该申请1台GPU节点，合16核CPU。 用于提交单节点CUDA作业的LSF作业控制脚本<code>cudahello.lsf</code>内容如下。
 
-由于登录节点没有安装CUDA加速卡，因此不能运行CUDA程序。 CUDA程序必须提交到LSF作业管理系统的gpu队列运行。 用于提交单节点CUDA作业的LSF作业控制脚本<code>cudahello.lsf</code>内容如下：
-
-<pre>#BSUB -J HELLO_CUDA
+<pre>#BUSB -q gpu
+#BSUB -J HELLO_CUDA
 #BSUB -L /bin/bash
-#BSUB -o job.out
-#BSUB -e job.err
-#BSUB -n 1
-        
-export PATH=/lustre/utility/cuda-5.0/bin/:$PATH
-export C_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=/lustre/utility/cuda-5.0/include/:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/lustre/utility/cuda-5.0/lib64/:$LD_LIBRARY_PATH
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -n 16
+#BSUB -R &quot;span[ptile=16]&quot;
 
-./cudahello </pre>
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module load cuda/5.5
+
+./cudahello</pre>
 将CUDA作业提交到<code>gpu</code>队列上：
 
 <pre>$ bsub -q gpu &lt; cudahello.lsf</pre>
-作业运行结束后，在工作目录下查看输出结果<code>job.out</code>、<code>job.err</code>。
-
-== 使用module简化环境设置 ==
-
-使用Environment Module可以简化环境变量的书写，过程如下。
-
-<ol style="list-style-type: decimal;">
-<li><p>编译源程序。</p>
-<pre>$ module load cuda/5.0
-$ nvcc -o cudahello cudahello.cu</pre></li>
-<li><p>提交到LSF的gpu队列，使用的作业脚本为<code>cuda.lsf</code>，内容如下：</p>
-<pre>#BSUB -J HELLO_CUDA
-#BSUB -L /bin/bash
-#BSUB -o job.out
-#BSUB -e job.err
-#BSUB -n 1
-
-MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
-module load cuda/5.0
-
-./cudahello </pre></li></ol>
-
-提交到gpu队列：
-
-<pre>    $ bsub -q gpu &lt; cuda.lsf</pre>
 = 参考资料 =
 
 * “LLNL Tutorials: Message Passing Interface (MPI)” https://computing.llnl.gov/tutorials/mpi/
