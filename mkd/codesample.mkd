@@ -234,7 +234,7 @@ MPI (Message Passing Interface)是并行计算中使用非常广泛的编程接�
 	module load icc/13.1.1
 	module load impi/4.1.1.036
 	
-	mpiexec.hydra ./hello_intel
+	mpirun ./hello_intel
 
 提交作业，等待结果：
 

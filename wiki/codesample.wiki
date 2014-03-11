@@ -191,7 +191,7 @@ module purge
 module load icc/13.1.1
 module load impi/4.1.1.036
 
-mpiexec.hydra ./hello_intel</pre>
+mpirun ./hello_intel</pre>
 提交作业，等待结果：
 
 <pre>$ bsub &lt; hello_intel.lsf &amp;&amp; bjobs</pre>
