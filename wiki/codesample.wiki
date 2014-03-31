@@ -243,7 +243,7 @@ int main()
 <pre>module purge &amp;&amp; module load cuda/5.5 &amp;&amp; nvcc cudahello.cu -o cudahello</pre>
 由于登录节点没有安装CUDA加速卡，因此不能运行CUDA程序。 CUDA程序必须提交到LSF作业管理系统的gpu队列运行。 由于LSF对GPU卡的资源管理不够完善，因此指定资源时需要“折算”成相应的CPU数量。 譬如，某个计算任务需要使用2块GPU卡(1个GPU节点有2块GPU卡)，则在作业脚本中应该申请1台GPU节点，合16核CPU。 用于提交单节点CUDA作业的LSF作业控制脚本<code>cudahello.lsf</code>内容如下。
 
-<pre>#BUSB -q gpu
+<pre>#BSUB -q gpu
 #BSUB -J HELLO_CUDA
 #BSUB -L /bin/bash
 #BSUB -o %J.out

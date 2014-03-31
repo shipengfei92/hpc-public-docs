@@ -297,7 +297,7 @@ CUDA程序必须提交到LSF作业管理系统的gpu队列运行。
 譬如，某个计算任务需要使用2块GPU卡(1个GPU节点有2块GPU卡)，则在作业脚本中应该申请1台GPU节点，合16核CPU。
 用于提交单节点CUDA作业的LSF作业控制脚本```cudahello.lsf```内容如下。
 
-	#BUSB -q gpu
+	#BSUB -q gpu
 	#BSUB -J HELLO_CUDA
 	#BSUB -L /bin/bash
 	#BSUB -o %J.out
