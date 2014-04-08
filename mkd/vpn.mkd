@@ -3,6 +3,33 @@
 <http://hpc.sjtu.edu.cn>
 % 2013年8月18日 更新
 
+PPTP client
+======
+
+1. Setup up a PPTP VPN configuration named "hpcvpn"
+
+	# pptpsetup --create hpcvpn --server access.jianwen.me --username USERNAME --password PASSWORD --encrypt
+
+2. For the first time, connect with debugging information
+
+	# pon hpcvpn debug dump logfd 2 nodetach
+	# Ctrl + C
+
+3. Connect to VPN
+
+	# pon hpcvpn
+
+4. Add route table entry
+	
+	# ip route add 202.120.58.0/24 dev ppp0
+
+5. Work on π with SSH connection.
+
+	$ ssh 202.120.58.231
+
+6. Work done. Disconnect from VPN.
+
+	# poff hpcvpn
 
 参考资料
 ======

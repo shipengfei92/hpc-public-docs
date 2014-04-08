@@ -1,3 +1,26 @@
+= PPTP client =
+
+<ol style="list-style-type: decimal;">
+<li><p>Setup up a PPTP VPN configuration named “hpcvpn”</p>
+= pptpsetup –create hpcvpn –server access.jianwen.me –username USERNAME –password PASSWORD –encrypt =
+</li>
+<li><p>For the first time, connect with debugging information</p>
+= pon hpcvpn debug dump logfd 2 nodetach =
+
+= Ctrl + C =
+</li>
+<li><p>Connect to VPN</p>
+= pon hpcvpn =
+</li>
+<li><p>Add route table entry</p>
+= ip route add 202.120.58.0/24 dev ppp0 =
+</li>
+<li><p>Work on π with SSH connection.</p>
+<p>$ ssh 202.120.58.231</p></li>
+<li><p>Work done. Disconnect from VPN.</p>
+= poff hpcvpn =
+</li></ol>
+
 = 参考资料 =
 
 * “PPTP v.s. L2TP v.s. OpenVPN” https://www.ivpn.net/knowledgebase/62/PPTP-vs-L2TP-vs-OpenVPN.html
