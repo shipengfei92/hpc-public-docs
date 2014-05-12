@@ -60,6 +60,7 @@ update :
 cleanall : clean
 	-cd wiki && rm -f $(OUT_WIKI)
 	-cd pdf && rm -f $(OUT_PDF)
+	-cd msword && rm -f $(OUT_DOCX)
 
 git :
 	git push gitlab
