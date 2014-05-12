@@ -67,13 +67,13 @@ Windows User
 
 After starting up Putty,  please fill in the SSH login node's IP address(```IP address```), SSH port(```port```), then press ```Open```, as Figure 1.
 
-![Fill in the SSH address and port](putty1.png)
+![Fill in the SSH address and port](figures/putty1.png)
 
 In the terminal window, type in your SSH username and password to log in, as Figure 2. 
 
 *Note: when you are typing in the password, there is no ```*``` character to echo, please do it as usual and press 'enter' to log in.*
 
-![Type in the username and password in putty terminal window](putty2.png)
+![Type in the username and password in putty terminal window](figures/putty2.png)
 
 Linux/Unix/Mac User
 ------
@@ -90,9 +90,9 @@ Windows User
 
 Windows user can use WinSCP to transfer files between the cluster and your own computer. As the figure below, fill in the node's address(```Host name```), SSH port(```Port number```), SSH username(```User name```), SSH password(```Password```), then press ```Login``` to connect. The method of using WinSCP is like using FTP client GUI, as Figure 4.
 
-![Fill in the SSH connection argument in WinSCP](winscp.png)
+![Fill in the SSH connection argument in WinSCP](figures/winscp.png)
 
-![The operation interface of WinSCP](winscp2.png)
+![The operation interface of WinSCP](figures/winscp2.png)
 
 \clearpage
 
