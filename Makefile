@@ -49,8 +49,8 @@ $(OUT_DOCX) : %.docx : %.mkd Makefile
 	pandoc $(PANDOC_TEX_OPT) $< -o tex/$@
 
 clean :
-	-cd pdf && rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
-	-cd tex && rm -f *.tex *.toc *.aux *.fls *.fdb_latexmk *.out  *.latex *.log
+	-cd pdf && rm -f *.tex; rm -f *.toc; rm -f *.aux; rm -f *.fls; rm -f *.fdb_latexmk; rm -f *.out; rm -f *.latex; rm -f *.log
+	-cd tex && rm -f *.tex; rm -f *.toc; rm -f *.aux; rm -f *.fls; rm -f *.fdb_latexmk; rm -f *.out; rm -f *.latex; rm -f *.log
 
 update :
 	wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls
