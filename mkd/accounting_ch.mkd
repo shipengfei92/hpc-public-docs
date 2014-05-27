@@ -128,6 +128,6 @@ GPU机时的计费单位是“卡小时”(cardhours)，卡小时与用于计算
 
 参考资料
 ======
-* "LSF Command Reference" <http://www.bsc.es/support/LSF/9.1.2/print/lsf_command_ref.pdf >
+* "LSF Command Reference" <http://www.bsc.es/support/LSF/9.1.2/print/lsf_command_ref.pdf>
 * "Manual page: bacct" <http://www-01.ibm.com/support/knowledgecenter/SSETD4_9.1.2/lsf_command_ref/bacct.1.dita?lang=en>
 
