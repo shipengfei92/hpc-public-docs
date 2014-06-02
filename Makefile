@@ -2,9 +2,7 @@ vpath %.mkd mkd
 vpath %.pdf pdf
 vpath %.wiki wiki
 vpath %.tex tex
-vpath %.cls tex
-vpath %.cfg tex
-vpath %.latex pandoc
+vpath %.context pandoc
 vpath %.docx msword
 
 SRC_MKD = $(shell cd mkd && ls *.mkd)
@@ -20,6 +18,8 @@ PANDOC_TEX_TEMPLATE = pandoc/zh.context
 PANDOC_DIR = pandoc
 PANDOC_TEX_OPT = -f markdown -t context --template=$(PANDOC_TEX_TEMPLATE) --toc --smart --standalone
 PANDOC_WIKI_OPT = -f markdown -t mediawiki --smart --standalone
+
+GIT_REPO = https://raw.githubusercontent.com/weijianwen/hpc-public-docs/master
 
 all: $(OUT_PDF) $(OUT_WIKI) $(OUT_DOCX)
 
@@ -49,9 +49,8 @@ clean :
 	-cd tex && context --purge; rm *.tex
 
 update :
-	wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls
-	wget -q $(REPOURL)/$(DOCCLASS).cfg -O tex/$(DOCCLASS).cfg
-	wget -q $(REPOURL)/$(DOCCLASS).latex -O pandoc/$(DOCCLASS).latex
+	wget -q $(GIT_REPO)/Makefile -O Makefile
+	wget -q $(GIT_REPO)/pandoc/zh.context -O pandoc/zh.context
 
 cleanall : clean
 	-cd wiki && rm -f $(OUT_WIKI)
