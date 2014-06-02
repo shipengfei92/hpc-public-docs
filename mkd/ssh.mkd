@@ -86,8 +86,6 @@ Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件�
 
 ![WinSCP操作界面](figures/winscp2.png)
 
-\clearpage
-
 Linux/Unix/Mac用户使用scp和sftp传输文件
 ------
 
