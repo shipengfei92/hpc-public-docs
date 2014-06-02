@@ -66,8 +66,6 @@ Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件�
 
 [[Image:winscp2.png|frame|none|alt=|caption WinSCP操作界面]]
 
-
-
 == Linux/Unix/Mac用户使用scp和sftp传输文件 ==
 
 *NIX用户可以使用命令行工具在本地与集群之间传输数据。下面的命令将<code>data/</code>目录上传到家目录下的<code>tmp/</code>文件夹下。

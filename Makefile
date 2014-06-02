@@ -14,18 +14,14 @@ OUT_DOCX = $(SRC_MKD:%.mkd=%.docx)
 
 SED=gsed
 
-# Document Class
-DOCCLASS := hpcmanual
-# LATEX_OPT = -xelatex -silent -f
-LATEX_OPT = -gg -xelatex -f -outdir=../pdf
-PANDOC_DIR := pandoc
-PANDOC_TEX_OPT := -f markdown -t latex --template=pandoc/$(DOCCLASS).latex --toc --listings --smart --standalone
-PANDOC_WIKI_OPT := -f markdown -t mediawiki --smart --standalone
-REPOURL = https://raw.github.com/weijianwen/hpc-manual-class/master/pandoc
-# pdf viewer: evince/open
-VIEWER = open
+TEX = context
+TEX_OPT = --nonstopmode -result=
+PANDOC_TEX_TEMPLATE = pandoc/zh.context
+PANDOC_DIR = pandoc
+PANDOC_TEX_OPT = -f markdown -t context --template=$(PANDOC_TEX_TEMPLATE) --toc --smart --standalone
+PANDOC_WIKI_OPT = -f markdown -t mediawiki --smart --standalone
 
-all: $(OUT_PDF) $(OUT_WIKI)
+all: $(OUT_PDF) $(OUT_WIKI) $(OUT_DOCX)
 
 .PHONY : all clean cleanall release pdf wiki
 
@@ -35,8 +31,8 @@ wiki : $(OUT_WIKI)
 
 docx : $(OUT_DOCX)
 
-$(OUT_PDF) : %.pdf : %.tex $(DOCCLASS).cls $(DOCCLASS).cfg Makefile
-	-cd tex && latexmk $(LATEX_OPT) $*
+$(OUT_PDF) : %.pdf : %.tex Makefile
+	-cd tex && $(TEX) $* $(TEX_OPT)../pdf/$@
 
 $(OUT_WIKI) : %.wiki : %.mkd Makefile
 	-pandoc $(PANDOC_WIKI_OPT) $< -o wiki/$@
@@ -45,12 +41,12 @@ $(OUT_WIKI) : %.wiki : %.mkd Makefile
 $(OUT_DOCX) : %.docx : %.mkd Makefile
 	pandoc $< -o msword/$@
 
-%.tex : %.mkd $(DOCCLASS).latex Makefile
+%.tex : %.mkd $(PANDOC_TEX_TEMPLATE) Makefile
 	pandoc $(PANDOC_TEX_OPT) $< -o tex/$@
 
 clean :
-	-cd pdf && rm -f *.tex; rm -f *.toc; rm -f *.aux; rm -f *.fls; rm -f *.fdb_latexmk; rm -f *.out; rm -f *.latex; rm -f *.log
-	-cd tex && rm -f *.tex; rm -f *.toc; rm -f *.aux; rm -f *.fls; rm -f *.fdb_latexmk; rm -f *.out; rm -f *.latex; rm -f *.log
+	-cd pdf && context --purge
+	-cd tex && context --purge; rm *.tex
 
 update :
 	wget -q $(REPOURL)/$(DOCCLASS).cls -O tex/$(DOCCLASS).cls

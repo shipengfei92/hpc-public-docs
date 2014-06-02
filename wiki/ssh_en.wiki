@@ -76,8 +76,6 @@ Windows user can use WinSCP to transfer files between the cluster and your own c
 
 [[Image:winscp2.png|frame|none|alt=|caption The operation interface of WinSCP]]
 
-
-
 == Linux/Unix/Mac User ==
 
 *NIX user can use the command line tools to transfer the data between the cluster and your own computer. The instruction below will upload the folder <code>data/</code> to the home folder’s <code>tmp/</code>.

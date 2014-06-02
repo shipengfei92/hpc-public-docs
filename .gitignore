@@ -1,6 +1,4 @@
 .DS_Store
-tex/
-!tex/figures
 *.tex
 *.bak
 *.fls
@@ -15,5 +13,10 @@ tex/
 *.swp
 *.swo
 *.xdv
+*.tuc
 *~
 *.fdb_latexmk
+ssh_context.pdf
+!tex/type-myfonts.tex
+!tex/ssh_context.tex
+!tex/ssh_context_backup.tex

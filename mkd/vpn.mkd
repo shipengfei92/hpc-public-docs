@@ -8,32 +8,33 @@ PPTP client
 
 1. Setup up a PPTP VPN configuration named "hpcvpn"
 
-	# pptpsetup --create hpcvpn --server access.jianwen.me --username USERNAME --password PASSWORD --encrypt
+		# pptpsetup --create hpcvpn --server access.jianwen.me \
+		--username USERNAME --password PASSWORD --encrypt
 
 2. For the first time, connect with debugging information
 
-	# pon hpcvpn debug dump logfd 2 nodetach
-	# Ctrl + C
+		# pon hpcvpn debug dump logfd 2 nodetach
+		# Ctrl + C
 
 3. Connect to VPN
 
-	# pon hpcvpn
+		# pon hpcvpn
 
 4. Add route table entry
 	
-	# ip route add 202.120.58.0/24 dev ppp0
+		# ip route add 202.120.58.0/24 dev ppp0
 
 5. Work on π with SSH connection.
 
-	$ ssh 202.120.58.231
+		$ ssh 202.120.58.231
 
 6. Work done. Disconnect from VPN.
 
-	# poff hpcvpn
+		# poff hpcvpn
 
 参考资料
 ======
-* "PPTP v.s. L2TP v.s. OpenVPN" https://www.ivpn.net/knowledgebase/62/PPTP-vs-L2TP-vs-OpenVPN.html 
-* "测绘学院网络与数据处理中心OpenVPN使用指南" http://hx.linuxadmin.cn/?m=201210
-* "Tunnelblick OpenVPN Setup Instructions for VyprVPN" http://www.giganews.com/support/vyprvpn/vpn-setup/mac/tunnelblick/openvpn.html
-* "Linux (Ubuntu) OpenVPN Manual Setup Instructions" http://www.giganews.com/support/vyprvpn/vpn-setup/linux/openvpn.html
+* "PPTP v.s. L2TP v.s. OpenVPN" <https://www.ivpn.net/knowledgebase/62/PPTP-vs-L2TP-vs-OpenVPN.html>
+* "测绘学院网络与数据处理中心OpenVPN使用指南" <http://hx.linuxadmin.cn/?m=201210>
+* "Tunnelblick OpenVPN Setup Instructions for VyprVPN" <http://www.giganews.com/support/vyprvpn/vpn-setup/mac/tunnelblick/openvpn.html>
+* "Linux (Ubuntu) OpenVPN Manual Setup Instructions" <http://www.giganews.com/support/vyprvpn/vpn-setup/linux/openvpn.html>
