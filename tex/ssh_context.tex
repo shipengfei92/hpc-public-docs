@@ -1,10 +1,22 @@
-% pandoc -f markdown -t context --toc  --smart --standalone ../mkd/ssh.mkd -o ssh.tex
+\usemodule[zhfonts]
+\zhfonts[rm, 12pt]
 
+%% Todo
+% 更松弛的行间距;
+% 松弛一些目录格式；
+% “摘要”样式？
 
-\startmode[*mkii]
-  \enableregime[utf-8]  
-  \setupcolors[state=start]
-\stopmode
+\setupindenting[yes,2em]
+\setupheads[indentnext=yes]
+
+\setuptyping
+[before={\startframedtext[width=\makeupwidth,
+                             background=screen,
+                             backgroundscreen=.8]},
+    after={\stopframedtext}]
+
+\setupinterlinespace[line=1.4\bodyfontsize]
+
 
 % Enable hyperlinks
 \setupinteraction[state=start, color=middleblue]
@@ -15,7 +27,7 @@
 
 \setuppagenumbering[location={footer,center}]
 
-\setupbodyfont[11pt]
+\setupbodyfont[12pt]
 
 \setupwhitespace[medium]
 
@@ -24,7 +36,7 @@
 \setuphead[subsection]   [style=\tfb]
 \setuphead[subsubsection][style=\bf]
 
-\setuphead[chapter, section, subsection, subsubsection][number=no]
+\setuphead[chapter, section, subsection][number=yes]
 
 \definedescription
   [description]
@@ -147,8 +159,6 @@ Windows用户可使用WinSCP在自己的计算机和登录节点间传输文件�
 \placefigure[here,nonumber]{在WinSCP中设定SSH连接参数}{\externalfigure[figures/winscp.png]}
 
 \placefigure[here,nonumber]{WinSCP操作界面}{\externalfigure[figures/winscp2.png]}
-
-\clearpage
 
 \subsection[linuxunixmac用户使用scp和sftp传输文件]{Linux/Unix/Mac用户使用scp和sftp传输文件}
 
