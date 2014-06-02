@@ -94,8 +94,6 @@ Windows user can use WinSCP to transfer files between the cluster and your own c
 
 ![The operation interface of WinSCP](figures/winscp2.png)
 
-\clearpage
-
 Linux/Unix/Mac User
 ------
 
