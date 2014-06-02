@@ -1,11 +1,6 @@
 \usemodule[zhfonts]
 \zhfonts[rm, 12pt]
 
-%% Todo
-% 章一级的标题使用黑体；
-% 松弛一些目录格式；
-% “摘要”样式？
-
 \setupindenting[yes,2em]
 \setupheads[indentnext=yes]
 
@@ -13,7 +8,7 @@
 [before={\startframedtext[width=\makeupwidth,
                              background=screen,
                              backgroundscreen=.8]},
-    after={\stopframedtext}]
+    after={\stopframedtext}, bodyfont=9.0pt]
 
 \setupinterlinespace[line=1.4\bodyfontsize]
 
@@ -22,9 +17,10 @@ $if(mainlang)$
 $endif$
 
 % Enable hyperlinks
-\setupinteraction[state=start, color=middleblue]
+\setupinteraction[state=start, color=middleblue, contrastcolor=middleblue]
 
-\setuppapersize [$if(papersize)$$papersize$$else$letter$endif$][$if(papersize)$$papersize$$else$letter$endif$]
+\setuppapersize[A4]
+
 \setuplayout    [width=middle,  backspace=1.5in, cutspace=1.5in,
                  height=middle, topspace=0.75in, bottomspace=0.75in]
 
