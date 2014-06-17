@@ -56,9 +56,10 @@ GCC编译OpenMP代码时加上<code>-fopenmp</code>：
 
 export OMP_NUM_THREADS=4
 ./ompgcc</pre>
-提交到LSF：
+提交到LSF，查看程序输出：
 
-<pre>$ bsub &lt; ompgcc.lsf</pre>
+<pre>$ dos2unix ompgcc.lsf &amp;&amp; bsub &lt; ompgcc.lsf
+$ sleep 10 &amp;&amp; bpeek</pre>
 == 使用Intel编译器 ==
 
 Intel编译器<code>icc</code>编译OpenMP代码时需要使用<code>-openmp</code>参数。
@@ -85,7 +86,8 @@ export OMP_NUM_THREADS=4
 ./ompintel</pre>
 提交到LSF：
 
-<pre>bsub &lt; ompintel.lsf &amp;&amp; bjobs</pre>
+<pre>$ dos2unix ompintel.lsf &amp;&amp; bsub &lt; ompintel.lsf
+$ sleep 10 &amp;&amp; bpeek</pre>
 = MPI示例 =
 
 MPI (Message Passing Interface)是并行计算中使用非常广泛的编程接口。 它定义了一组标准的进程间消息传递接口，进程可以在同一节点或跨节点进行消息通信。 软硬件厂商可以在保证MPI接口相容的前提下，设计自己的实现。 π超级计算机上支持的MPI实现包括Intel MPI、MPICH2、OpenMPI、MVAPCH2等，用户调用不同的Module即可在不同的MPI实现间切换。 用户在登录节点上选择需要的MPI环境，编译程序后提交给LSF作业管理系统。 如果从原有的MPI实现切换到另一个MPI实现，MPI程序需要重新编译。
@@ -167,7 +169,8 @@ module load openmpi/gcc/1.6.5
 mpirun ./hello_openmpi</pre>
 提交作业，作业运行结束后可查看out和err文件的内容。
 
-<pre>$ bsub &lt; hello_openmpi.lsf &amp;&amp; bjobs</pre>
+<pre>$ dos2unix hello_openmpi.lsf &amp;&amp; bsub &lt; hello_openmpi.lsf
+$ sleep 10 &amp;&amp; bpeek</pre>
 == 将Intel MPI套件编译的程序提交到LSF ==
 
 用户也可以使用Intel MPI库和Intel编译器构建应用。 注意，要调用<code>icc</code>而非gcc作为后端编译器，必须使用<code>mpiicc</code>。
@@ -194,7 +197,8 @@ module load impi/4.1.1.036
 mpirun ./hello_intel</pre>
 提交作业，等待结果：
 
-<pre>$ bsub &lt; hello_intel.lsf &amp;&amp; bjobs</pre>
+<pre>$ dos2unix hello_intel.lsf &amp;&amp; bsub &lt; hello_intel.lsf
+$ sleep 10 &amp;&amp; bpeek</pre>
 = CUDA示例 =
 
 这部分演示如何编译NVIDIA CUDA程序，并提交到LSF的gpu队列中运行。 ''注意：登录节点只有CUDA软件开发环境，没有CUDA硬件加速卡，因而不能在登录节点执行CUDA应用程序，必须把作业提交到LSF的gpu队列运行。''
@@ -257,7 +261,8 @@ module load cuda/5.5
 ./cudahello</pre>
 将CUDA作业提交到<code>gpu</code>队列上：
 
-<pre>$ bsub -q gpu &lt; cudahello.lsf</pre>
+<pre>$ dos2unix cudahello.lsf &amp;&amp; bsub -q gpu &lt; cudahello.lsf
+$ sleep 10 &amp;&amp; bpeek</pre>
 = 参考资料 =
 
 * “LLNL Tutorials: Message Passing Interface (MPI)” https://computing.llnl.gov/tutorials/mpi/

@@ -71,9 +71,10 @@ GCC编译OpenMP代码时加上```-fopenmp```：
 	export OMP_NUM_THREADS=4
 	./ompgcc
 
-提交到LSF：
+提交到LSF，查看程序输出：
 
-	$ bsub < ompgcc.lsf
+	$ dos2unix ompgcc.lsf && bsub < ompgcc.lsf
+	$ sleep 10 && bpeek
 
 使用Intel编译器
 ------
@@ -105,7 +106,8 @@ LSF作业脚本```ompintel.lsf```内容如下：
 
 提交到LSF：
 
-	bsub < ompintel.lsf && bjobs
+	$ dos2unix ompintel.lsf && bsub < ompintel.lsf
+	$ sleep 10 && bpeek
 
 MPI示例
 ======
@@ -205,7 +207,8 @@ MPI (Message Passing Interface)是并行计算中使用非常广泛的编程接�
 
 提交作业，作业运行结束后可查看out和err文件的内容。
 
-	$ bsub < hello_openmpi.lsf && bjobs
+	$ dos2unix hello_openmpi.lsf && bsub < hello_openmpi.lsf
+	$ sleep 10 && bpeek
 
 将Intel MPI套件编译的程序提交到LSF
 ------
@@ -238,7 +241,8 @@ MPI (Message Passing Interface)是并行计算中使用非常广泛的编程接�
 
 提交作业，等待结果：
 
-	$ bsub < hello_intel.lsf && bjobs
+	$ dos2unix hello_intel.lsf && bsub < hello_intel.lsf
+	$ sleep 10 && bpeek
 
 
 CUDA示例
@@ -312,7 +316,8 @@ CUDA程序必须提交到LSF作业管理系统的gpu队列运行。
 
 将CUDA作业提交到```gpu```队列上：
 
-	$ bsub -q gpu < cudahello.lsf
+	$ dos2unix cudahello.lsf && bsub -q gpu < cudahello.lsf
+	$ sleep 10 && bpeek
 
 参考资料
 ======
