@@ -1,5 +1,11 @@
-\usemodule[zhfonts]
-\zhfonts[rm, 12pt]
+\usemodule[zhfonts][style=rm,size=12pt]
+
+% you can set 'sans' and 'mono' respectively
+% and their 'regular', 'bold', 'italic', 'bolditalic'
+\setupzhfonts[serif][regular=adobesongstd, bold=adobeheitistd]
+\setupzhfonts[latin,serif][regular=texgyrepagella]
+\setupinterlinespace[line=1.4\bodyfontsize]
+\setupwhitespace[big]
 
 \setupindenting[yes,2em]
 \setupheads[indentnext=yes]
@@ -10,7 +16,6 @@
                              backgroundscreen=.8]},
     after={\stopframedtext}, bodyfont=9.0pt]
 
-\setupinterlinespace[line=1.4\bodyfontsize]
 
 $if(mainlang)$
 \mainlanguage[$mainlang$]

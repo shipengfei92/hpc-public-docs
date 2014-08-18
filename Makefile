@@ -13,7 +13,7 @@ OUT_DOCX = $(SRC_MKD:%.mkd=%.docx)
 SED=gsed
 
 TEX = context
-TEX_OPT = --nonstopmode -result=
+TEX_OPT = --nonstopmode
 PANDOC_TEX_TEMPLATE = pandoc/zh.context
 PANDOC_DIR = pandoc
 PANDOC_TEX_OPT = -f markdown -t context --template=$(PANDOC_TEX_TEMPLATE) --toc --smart --standalone
@@ -32,7 +32,7 @@ wiki : $(OUT_WIKI)
 docx : $(OUT_DOCX)
 
 $(OUT_PDF) : %.pdf : %.tex Makefile
-	-cd tex && $(TEX) $* $(TEX_OPT)../pdf/$@
+	-cd tex && $(TEX) $* $(TEX_OPT) ; mv $@ ../pdf
 
 $(OUT_WIKI) : %.wiki : %.mkd Makefile
 	-pandoc $(PANDOC_WIKI_OPT) $< -o wiki/$@
