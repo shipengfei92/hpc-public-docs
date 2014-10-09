@@ -105,6 +105,25 @@ bsub&gt; CTRL+d</pre>
 <pre>$ bsub -n 1 -q cpu -o job.out PROG1
 $ bsub -n 1 -q cpu -o job.out PROG2
 $ bsub -n 1 -q cpu -o job.out PROG3</pre>
+== 指定作业运行的节点 ==
+
+在作业脚本中可以使用<code>#BSUB -R &quot;select[hname=HOSTNAME]&quot;</code>指定作业运行的节点。譬如：
+
+<pre># 16core.script
+#BSUB -L /bin/bash
+#BSUB -J HELLO_MPI
+#BSUB -n 16
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R &quot;span[ptile=16]&quot;
+#BSUB -R &quot;select[hname=mic02]&quot;
+#BSUB -q cpu
+        
+MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+module purge
+module load openmpi/gcc/1.6.5
+
+mpirun ./mpihello</pre>
 = 查看和终止作业 =
 
 == 查看作业状态<code>bjobs</code> ==

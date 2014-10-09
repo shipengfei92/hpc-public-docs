@@ -139,6 +139,27 @@ bsub交互环境的主要有点是可以一次提交多个参数相同的作业�
 	$ bsub -n 1 -q cpu -o job.out PROG2
 	$ bsub -n 1 -q cpu -o job.out PROG3
 
+指定作业运行的节点
+------
+
+在作业脚本中可以使用```#BSUB -R "select[hname=HOSTNAME]"```指定作业运行的节点。譬如：
+
+	# 16core.script
+	#BSUB -L /bin/bash
+	#BSUB -J HELLO_MPI
+	#BSUB -n 16
+	#BSUB -e %J.err
+	#BSUB -o %J.out
+	#BSUB -R "span[ptile=16]"
+	#BSUB -R "select[hname=mic02]"
+	#BSUB -q cpu
+			
+	MODULEPATH=/lustre/utility/modulefiles:$MODULEPATH
+	module purge
+	module load openmpi/gcc/1.6.5
+	
+	mpirun ./mpihello
+
 查看和终止作业
 ======
 
