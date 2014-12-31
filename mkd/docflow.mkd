@@ -1,0 +1,17 @@
+% Document Processing Flow Using Pandoc and TeX
+% Center for HPC, SJTU \
+<http://hpc.sjtu.edu.cn>
+% Dec 31th, 2014
+
+Setup the workflow on Mac OS X
+======
+
+Setup the workflow on GNU/Linux
+======
+
+Setup the workflow on Windows
+======
+
+Reference
+======
+

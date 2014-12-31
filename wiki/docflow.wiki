@@ -1,0 +1,7 @@
+= Setup the workflow on Mac OS X =
+
+= Setup the workflow on GNU/Linux =
+
+= Setup the workflow on Windows =
+
+= Reference =
