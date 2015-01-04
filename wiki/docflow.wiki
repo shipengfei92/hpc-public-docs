@@ -1,5 +1,24 @@
 = Setup the workflow on Mac OS X =
 
+== Install Pandoc ==
+
+# Download pandoc-1.13.*-osx.pkg (about 27MB) from https://github.com/jgm/pandoc/releases.
+# Double click the pkg file to install Pandoc.
+
+== Install MacTeX ==
+
+# Download MacTex.pkg (about 2.3GB) from http://www.tug.org/mactex/.
+# Double click the pkg file to install MacTeX.
+
+== Install Fonts ==
+
+# Download TeX Gyre Termes family fonts from http://www.gust.org.pl/projects/e-foundry/tex-gyre/termes.
+# Download Chinese fonts AdobStongStd, AdobHeitiStd, AdobeFangsongStd and AdobKaitiStd. A download link is http://download.csdn.net/download/wpc0000/6762849.
+# Unzip and double click to install those fonts.
+# Install zhfonts module. A reference is https://gist.github.com/weijianwen/4a3794946982f4cc0b31.
+
+Now it should be okay for your Mac OS X to compile Markdown and LaTeX files with Pandoc.
+
 = Setup the workflow on GNU/Linux =
 
 = Setup the workflow on Windows =

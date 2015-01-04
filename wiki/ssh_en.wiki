@@ -91,7 +91,7 @@ Connected to 202.120.58.229
 sftp&gt; ls </pre>
 = Password-less Login =
 
-*Note: “Password-less login” is only available to Linux/UNIX/Mac user who uses SSH command line tools. *
+''Note: “Password-less login” is only available to Linux/UNIX/Mac user who uses SSH command line tools. ''
 
 “Password-less login” lets you log in without type in the username and password, it can also make an alias of server to simplify the instruction. Password-less login need to establish the SSH trust relationship from the '''remote host'''(the cluster’s login nodes) to the '''local host'''(your own computer). After the trust relationship is established, both sides will authenticate by SSH key-pair. For more information about SSH key-pair, please refer to [#Reference].
 

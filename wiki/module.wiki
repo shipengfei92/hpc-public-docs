@@ -58,52 +58,42 @@ openmpi/icc/1.6.4      mpich2/icc/1.4.1p1</pre>
 
 <math>\pi</math>集群上可以使用的编译器包括：GNU编译器(GCC)、Intel编译器、PGI编译器。 GCC-4.4.6编译器安装在操作系统目录下，能直接使用，不需要加载模块。 GCC-4.8.1、Intel编译器和PGI编译器需要加载相应模块。 编译器模块信息如下：
 
-<table>
-<thead>
-<tr class="header">
-<th align="center">模块</th>
-<th align="center">编译器版本</th>
-<th align="center">C编译器</th>
-<th align="center">C++编译器</th>
-<th align="center">F77编译器</th>
-<th align="center">F90编译器</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">gcc/4.4.6(默认)</td>
-<td align="center">4.4.6</td>
-<td align="center">gcc</td>
-<td align="center">g++</td>
-<td align="center">g77</td>
-<td align="center">gfortran</td>
-</tr>
-<tr class="even">
-<td align="center">gcc/4.8.1</td>
-<td align="center">4.8.1</td>
-<td align="center">gcc</td>
-<td align="center">g++</td>
-<td align="center">g77</td>
-<td align="center">gfortran</td>
-</tr>
-<tr class="odd">
-<td align="center">icc/13.1.1</td>
-<td align="center">13.1.1</td>
-<td align="center">icc</td>
-<td align="center">icpc</td>
-<td align="center">ifort</td>
-<td align="center">ifort</td>
-</tr>
-<tr class="even">
-<td align="center">pgi/13.9</td>
-<td align="center">13.9</td>
-<td align="center">pgcc</td>
-<td align="center">pgc++</td>
-<td align="center">无</td>
-<td align="center">无</td>
-</tr>
-</tbody>
-</table>
+{|
+!align="center"|模块
+!align="center"|编译器版本
+!align="center"|C编译器
+!align="center"|C++编译器
+!align="center"|F77编译器
+!align="center"|F90编译器
+|-
+|align="center"|gcc/4.4.6(默认)
+|align="center"|4.4.6
+|align="center"|gcc
+|align="center"|g++
+|align="center"|g77
+|align="center"|gfortran
+|-
+|align="center"|gcc/4.8.1
+|align="center"|4.8.1
+|align="center"|gcc
+|align="center"|g++
+|align="center"|g77
+|align="center"|gfortran
+|-
+|align="center"|icc/13.1.1
+|align="center"|13.1.1
+|align="center"|icc
+|align="center"|icpc
+|align="center"|ifort
+|align="center"|ifort
+|-
+|align="center"|pgi/13.9
+|align="center"|13.9
+|align="center"|pgcc
+|align="center"|pgc++
+|align="center"|无
+|align="center"|无
+|}
 
 <math>\pi</math>集群上的Nvidia CUDA开发环境版本为5.0，使用前请加载模块<code>cuda-default</code>或者<code>cuda/5.0</code>。
 
@@ -111,68 +101,56 @@ openmpi/icc/1.6.4      mpich2/icc/1.4.1p1</pre>
 
 <math>\pi</math>集群可用的MPI库比较丰富，包括Intel MPI(IMPI)、MPICH2和OpenMPI。 按照<code>mpicc</code>、<code>mpicxx</code>、<code>mpif77</code>和<code>mpif90</code>使用的后端编译器，MPICH2与OpenMPI还可以再细分为不同版本。
 
-<table>
-<thead>
-<tr class="header">
-<th align="center">模块</th>
-<th align="center">版本</th>
-<th align="center">mpicc</th>
-<th align="center">mpicxx</th>
-<th align="center">mpif77</th>
-<th align="center">mpif90</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">impi/4.1.1.036</td>
-<td align="center">4.1.1</td>
-<td align="center">gcc</td>
-<td align="center">g++</td>
-<td align="center">g77</td>
-<td align="center">gfortran</td>
-</tr>
-<tr class="even">
-<td align="center"></td>
-<td align="center"></td>
-<td align="center">(mpiicc uses icc)</td>
-<td align="center">(mpicpc uses icpc)</td>
-<td align="center"></td>
-<td align="center"></td>
-</tr>
-<tr class="odd">
-<td align="center">mpich2/icc/1.4.1p1</td>
-<td align="center">1.4.1p1</td>
-<td align="center">icc</td>
-<td align="center">icpc</td>
-<td align="center">ifort</td>
-<td align="center">ifort</td>
-</tr>
-<tr class="even">
-<td align="center">mpich2/gcc/1.4.1p1</td>
-<td align="center">1.4.1p1</td>
-<td align="center">gcc</td>
-<td align="center">g++</td>
-<td align="center">g77</td>
-<td align="center">gfortran</td>
-</tr>
-<tr class="odd">
-<td align="center">openmpi/icc/1.6.4</td>
-<td align="center">1.6.4</td>
-<td align="center">icc</td>
-<td align="center">g++</td>
-<td align="center">g77</td>
-<td align="center">gfortran</td>
-</tr>
-<tr class="even">
-<td align="center">openmpi/gcc/1.6.4</td>
-<td align="center">1.6.4</td>
-<td align="center">gcc</td>
-<td align="center">g++</td>
-<td align="center">g77</td>
-<td align="center">gfortran</td>
-</tr>
-</tbody>
-</table>
+{|
+!align="center"|模块
+!align="center"|版本
+!align="center"|mpicc
+!align="center"|mpicxx
+!align="center"|mpif77
+!align="center"|mpif90
+|-
+|align="center"|impi/4.1.1.036
+|align="center"|4.1.1
+|align="center"|gcc
+|align="center"|g++
+|align="center"|g77
+|align="center"|gfortran
+|-
+|align="center"|
+|align="center"|
+|align="center"|(mpiicc uses icc)
+|align="center"|(mpicpc uses icpc)
+|align="center"|
+|align="center"|
+|-
+|align="center"|mpich2/icc/1.4.1p1
+|align="center"|1.4.1p1
+|align="center"|icc
+|align="center"|icpc
+|align="center"|ifort
+|align="center"|ifort
+|-
+|align="center"|mpich2/gcc/1.4.1p1
+|align="center"|1.4.1p1
+|align="center"|gcc
+|align="center"|g++
+|align="center"|g77
+|align="center"|gfortran
+|-
+|align="center"|openmpi/icc/1.6.4
+|align="center"|1.6.4
+|align="center"|icc
+|align="center"|g++
+|align="center"|g77
+|align="center"|gfortran
+|-
+|align="center"|openmpi/gcc/1.6.4
+|align="center"|1.6.4
+|align="center"|gcc
+|align="center"|g++
+|align="center"|g77
+|align="center"|gfortran
+|}
 
 == 工具库 ==
 
@@ -222,7 +200,6 @@ module load impi/4.1.1.036  </pre>
 常见错误
 ======
 -->
-
 = 参考资料 =
 
 * “Environment Module” http://modules.sourceforge.net/
