@@ -39,7 +39,7 @@ Setup the workflow on GNU/Linux
 
 * Go to [download page](http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz) to download the installer. (don't install from package manager, because it provides a very old version —— 2009)
 * Run the installer [installation guide page](http://www.tug.org/texlive/quickinstall.html)
-* Down the latest version of zhfont [zhfont github page](https://github.com/liyanrui/zhfonts) and copy it to *texlive/2014/texmf-dist/tex/context/third*
+* Down the latest version of zhfont [zhfont github page](https://github.com/liyanrui/zhfonts) and replace the original zhfont in texlive 2014 with the latest version.
 * Remember: Your old installation of texlive should be completely removed.
 
 2. Install pandoc
