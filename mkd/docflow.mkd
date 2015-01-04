@@ -35,6 +35,23 @@ Now it should be okay for your Mac OS X to compile Markdown and LaTeX files with
 
 Setup the workflow on GNU/Linux
 ======
+1. Install Texlive 2014
+
+* Go to [download page](http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz) to download the installer. (don't install from package manager, because it provides a very old version —— 2009)
+* Run the installer [installation guide page](http://www.tug.org/texlive/quickinstall.html)
+* Down the latest version of zhfont [zhfont github page](https://github.com/liyanrui/zhfonts) and copy it to *texlive/2014/texmf-dist/tex/context/third*
+* Remember: Your old installation of texlive should be completely removed.
+
+2. Install pandoc
+
+* Go to [download page](http://johnmacfarlane.net/pandoc/installing.html) to download and install pandoc according to your linux distribution.
+* Or install from package manager:
+    $ sudo apt-get install pandoc
+
+3. Generate wiki and pdf file
+
+* Please refer to makefile of hpc-maintenance repo [gitlab page](http://git.omnilab.sjtu.edu.cn/hpc/hpc-maintenance-docs/tree/master)
+
 
 Setup the workflow on Windows
 ======
@@ -60,4 +77,3 @@ Setup the workflow on Windows
 
 Reference
 ======
-
