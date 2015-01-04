@@ -11,6 +11,25 @@ Setup the workflow on GNU/Linux
 
 Setup the workflow on Windows
 ======
+1. Install Tex Live 2014<https://www.tug.org/texlive/>
+
+* Go to [its download page](https://www.tug.org/texlive/acquire-iso.html) to download the Tex Live ISO file.
+* Mount the ISO file and run install-tl-windows.bat. For details, visit its [installation page](https://www.tug.org/texlive/windows.html).
+* After the installation, you can run context --version to see if the executable has been added to your PATH.
+* Get zhfonts from its [github page](https://github.com/liyanrui/zhfonts) and set it up by following [its instruction](http://garfileo.is-programmer.com/posts/23740). One thing to notice, please copy zhfonts into *texlive\2014\texmf-dist\tex\context\third*.
+
+2. Install pandoc<http://johnmacfarlane.net/pandoc>
+
+* Go to the [download page](https://github.com/jgm/pandoc/releases) to download the latest pandoc for Windows and install it.
+* Run pandoc --version in command line to check whether it is properly installed.
+
+3. Install Cygwin<https://cygwin.com/>
+
+* Download the Cygwin that corresponds to your OS from its [download page](https://cygwin.com/install.html).
+* In your first installation, you should choose *Install from Internet* and in the later step, choose <http://mirrors.ustc.edu.cn> or any other mirro in China to get better speed.
+* In the package selection step, select Base--sed, Devel--make, Base--openssl, Net--openssl, Devel--git,git-completion.
+* After the installation, open Cygwin and see whether the context and pandoc command can be used. If any of them is not available, please add their directory into PATH.
+
 
 Reference
 ======
