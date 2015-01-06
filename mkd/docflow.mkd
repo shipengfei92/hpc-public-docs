@@ -56,7 +56,7 @@ Setup the workflow on Windows
 * In your first installation, you should choose *Install from Internet* and in the later step, choose <http://mirrors.ustc.edu.cn> or any other mirro in China to get better speed.
 * In the package selection step, select Base--sed, Devel--make, Base--openssl, Net--openssl, Devel--git,git-completion.
 * After the installation, open Cygwin and see whether the context and pandoc command can be used. If any of them is not available, please add their directory into PATH.
-
+* Now you should be able to generate docs.
 
 Reference
 ======
