@@ -6,57 +6,72 @@
 Setup the workflow on Mac OS X
 ======
 
-Install Pandoc
------
-1. Download pandoc-1.13.\*-osx.pkg (about 27MB) from <https://github.com/jgm/pandoc/releases>.
+*Firstly*, please install [pandoc](http://johnmacfarlane.net/pandoc/) package from [```Homebrew```](http://brew.sh).
+If you haven't installed brew on your Mac, please give it a try.
 
-2. Double click the pkg file to install Pandoc.
+	$ brew install pandoc
 
+Standalone pandoc package is available on <https://github.com/jgm/pandoc/releases>.
 
-Install MacTeX
------
-1. Download MacTex.pkg (about 2.3GB) from <http://www.tug.org/mactex/>.
+*Secondaly*, install [MacTeX](https://www.tug.org/mactex/) via [```Homebrew Cask```](http://caskroom.io).
+Yes, cask is highly recommended for Mac users too. Please be patient as it takes time to download the 2.3GB installation file.
 
-2. Double click the pkg file to install MacTeX.
+	$ brew cask install mactex
 
+Don't forget to add ```texbin``` into ```$PATH```:
+	
+	$ echo 'export PATH=$PATH:/usr/texbin' >> ~/.bash_profile
 
-Install Fonts
------
-1. Download TeX Gyre Termes family fonts from <http://www.gust.org.pl/projects/e-foundry/tex-gyre/termes>.
+Standalone MacTeX package is available on <https://www.tug.org/mactex/>.
 
-2. Download Chinese fonts AdobStongStd, AdobHeitiStd, AdobeFangsongStd and AdobKaitiStd. A download link is <http://download.csdn.net/download/wpc0000/6762849>.
+*After that*, install the necessary fonts by double click the font files. Font files "TeX Gyre Termes" can be retrieved from <http://www.gust.org.pl/projects/e-foundry/tex-gyre/termes>.
+Please make sure you have authorized files for the Adobe Chinese fonts: ```AdobStongStd```, ```AdobHeitiStd```, ```AdobeFangsongStd```and ```AdobKaitiStd```.
 
-3. Unzip and double click to install those fonts.
+*Finally*, install ```zhfonts``` module for the ConTeXt engine.
 
-4. Install zhfonts module. A reference is <https://gist.github.com/weijianwen/4a3794946982f4cc0b31>.
+	$ cd ~/Library/
+	$ mkdir -p texmf/tex/context/third
+	$ cd !$
+	$ git clone https://github.com/liyanrui/zhfonts.git
+	$ luatools --generate
+	$ mtxrun --script fonts --reload
+	$ mtxrun --script fonts --list --pattern=\* --all
 
-Now it should be okay for your Mac OS X to compile Markdown and LaTeX files with Pandoc.
-
+Now you should be able to build the HPC sample documents.
 
 Setup the workflow on GNU/Linux
 ======
 
 Setup the workflow on Windows
 ======
-1. Install Tex Live 2014 (<https://www.tug.org/texlive/>)
 
-* Go to [its download page](https://www.tug.org/texlive/acquire-iso.html) to download the Tex Live ISO file.
-* Mount the ISO file and run install-tl-windows.bat. For details, visit its [installation page](https://www.tug.org/texlive/windows.html).
-* After the installation, you can run context to see if the executable has been added to your PATH.
-* Get zhfonts from its [github page](https://github.com/liyanrui/zhfonts) and set it up by following [its instruction](http://garfileo.is-programmer.com/posts/23740). One thing to notice, please copy zhfonts into *texlive\\2014\\texmf-dist\\tex\\context\\third*.
+At the very beginnning, Windows users are required to install [Cygwin](<https://cygwin.com/>) to make the Linux tools take effect.
+Pleas check the following tools during installation:
 
-2. Install pandoc (<http://johnmacfarlane.net/pandoc>)
+* Base:sed
+* Devel: make
+* Base: openssl
+* Net: openssl
+* Devel: git, git-completion.
 
-* Go to the [download page](https://github.com/jgm/pandoc/releases) to download the latest pandoc for Windows and install it.
-* Run pandoc in command line to check whether it is properly installed.
+<!-- TODO: add a screenshot to illustrate how to add Cygwin PATH in Windows. -->
 
-3. Install Cygwin (<https://cygwin.com/>)
+*Firstly*, install [pandoc](<http://johnmacfarlane.net/pandoc>) from its binary release on <https://github.com/jgm/pandoc/releases>.
 
-* Download the Cygwin that corresponds to your OS from its [download page](https://cygwin.com/install.html).
-* In your first installation, you should choose *Install from Internet* and in the later step, choose <http://mirrors.ustc.edu.cn> or any other mirro in China to get better speed.
-* In the package selection step, select Base--sed, Devel--make, Base--openssl, Net--openssl, Devel--git,git-completion.
-* After the installation, open Cygwin and see whether the context and pandoc command can be used. If any of them is not available, please add their directory into PATH.
-* Now you should be able to generate docs.
+*Secondly*, install [TeXLive](<https://www.tug.org/texlive/>) 2014 by running ```install-tl-windows.bat``` in the ISO image.
+
+<!-- TODO: add a screenshot to illustrate how to add TeXLive PATH in Windows. -->
+Don't forget to add the executable to PATH
+
+<!-- TODO: how to add font files in Windows. -->
+Then install extra fonts required by the HPC template.
+
+<!-- TODO: how to add zhfonts module in Windows -->
+*After that*, install ```zhfonts``` for the context engine.
+<!-- * Get zhfonts from its [github page](https://github.com/liyanrui/zhfonts) and set it up by following [its instruction](http://garfileo.is-programmer.com/posts/23740). One thing to notice, please copy zhfonts into *texlive\\2014\\texmf-dist\\tex\\context\\third*. -->
 
 Reference
 ======
+* "gist: Configure ConTeXt environment after installing TeX" <https://gist.github.com/weijianwen/4a3794946982f4cc0b31>
+* "TeXLive on Windows" <https://www.tug.org/texlive/windows.html>
+* "zhfonts模块的用法" <http://garfileo.is-programmer.com/posts/23740>
