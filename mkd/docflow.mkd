@@ -53,6 +53,7 @@ Pleas check the following tools during installation:
 * Base: openssl
 * Net: openssl
 * Devel: git, git-completion.
+* Editors: vim, vim-common
 
 After installation, a shortcut of Cygwin will be added on your Desktop.
 
@@ -70,7 +71,7 @@ Then install extra fonts required by the HPC template. Download fonts ```AdobSto
 
 2. Copy the folder zhfonts into ```texlive\\2014\\texmf-dist\\tex\\context\\third```.
 
-3. Run ```luatools --generate```.
+3. Run ```luatools --generate``` to make zhfonts take effect, run ```mtxrun --script fonts --reload``` to reload the fonts.
 
 Open Cygwin and now you should be able to use git and build the HPC sample documents.
 
