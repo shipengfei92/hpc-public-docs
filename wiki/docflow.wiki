@@ -37,16 +37,24 @@ $ ./install-tl
   [... messages omitted ...]
   Enter command: i
   [... when done, see below for post-install ...]</pre>
+When you see <code>Welcome to TeX Live!</code>, congratulations, you have successfully installed texlive2014. Now modify the environment variable PATH as follow:
+
+<pre>$ export PATH=/usr/local/texlive/2014/bin/x86_64-linux:$PATH  </pre>
+If you need mannual, please type:
+
+<pre>export MANPATH=/usr/local/texlive/2014/texmf-dist/doc/man:$MANPATH  
+export INFOPATH=/usr/local/texlive/2014/texmf-dist/doc/info:$INFOPATH  </pre>
 ''After that'', please install Pandoc from package manager.
 
 <pre>$ sudo apt-get install pandoc</pre>
 Standalone pandoc package is available on https://github.com/jgm/pandoc/releases.
 
-''Finally'', please download the latest version of zhfont from https://github.com/liyanrui/zhfonts. Then copy it to <code>texlive/2014/texmf-dist/tex/context/third</code>.
+''Finally'', please download the latest version of zhfont from https://github.com/liyanrui/zhfonts, then replace the original files with it:
 
+<pre>$ cp t-* /YOUR/INSTALL/PATH/texlive/2014/texmf-dist/doc/context/third/context-notes-zh-cn/src/</pre>
 ''Now'', we can generate wiki and pdf file using Texlive and pandoc.
 
-For the building steps, please refer to the Makefile in hpc-maintenance-docs repo http://git.hpc.sjtu.edu.cn/docs/hpc-maintenance-docs/blob/master/Makefile.
+For building steps, please refer to the Makefile in hpc-maintenance-docs repo http://git.hpc.sjtu.edu.cn/docs/hpc-maintenance-docs/blob/master/Makefile.
 
 = Setup the workflow on Windows =
 
