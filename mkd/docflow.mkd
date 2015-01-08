@@ -42,6 +42,30 @@ Now you should be able to build the HPC sample documents.
 Setup the workflow on GNU/Linux
 ======
 
+*Firstly*, please download TexLive 2014 installer from <http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz>.
+
+*Secondly*, run the installer.
+
+	$ cd /your/download/directory
+	$ ./install-tl  
+	  [... messages omitted ...]
+	  Enter command: i
+	  [... when done, see below for post-install ...]
+
+*After that*, please install Pandoc from package manager.
+	
+	$ sudo apt-get install pandoc
+
+Standalone pandoc package is available on <https://github.com/jgm/pandoc/releases>.
+
+*Finally*, please download the latest version of zhfont from <https://github.com/liyanrui/zhfonts>. Then copy it to ```texlive/2014/texmf-dist/tex/context/third```.
+
+*Now*, we can generate wiki and pdf file using Texlive and pandoc. 
+
+For the building steps, please refer to the Makefile in hpc-maintenance-docs repo <http://git.hpc.sjtu.edu.cn/docs/hpc-maintenance-docs/blob/master/Makefile>.
+
+	
+
 Setup the workflow on Windows
 ======
 
