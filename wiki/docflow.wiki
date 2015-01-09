@@ -1,4 +1,6 @@
-= Setup the workflow on Mac OS X =
+= Set up the Pandoc+TeX environment =
+
+== For Mac OS X ==
 
 ''Firstly'', please install [http://johnmacfarlane.net/pandoc/ pandoc] package from [http://brew.sh <code>Homebrew</code>]. If you haven’t installed brew on your Mac, please give it a try.
 
@@ -26,39 +28,47 @@ $ mtxrun --script fonts --reload
 $ mtxrun --script fonts --list --pattern=\* --all</pre>
 Now you should be able to build the HPC sample documents.
 
-= Setup the workflow on GNU/Linux =
+== For GNU/Linux ==
 
 ''Firstly'', please download TexLive 2014 installer from http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz.
 
-''Secondly'', run the installer.
+''Secondly'', run the installer. TeXLive can be installed into your $HOME, or into a global directory like <code>/usr/local</code> which requires root privilege.
 
 <pre>$ cd /your/download/directory
-$ ./install-tl  
+$ sudo ./install-tl  
   [... messages omitted ...]
   Enter command: i
   [... when done, see below for post-install ...]</pre>
-When you see <code>Welcome to TeX Live!</code>, congratulations, you have successfully installed texlive2014. Now modify the environment variable PATH as follow:
+When you see <code>Welcome to TeX Live!</code>, congratulations, you have successfully installed texlive2014. The following environment variables need to be added into <code>~/.bash_profile</code>:
 
-<pre>$ export PATH=/usr/local/texlive/2014/bin/x86_64-linux:$PATH  </pre>
-If you need mannual, please type:
+<pre># ~/.bash_profile
+export PATH=/usr/local/texlive/2014/bin/x86_64-linux:$PATH  </pre>
+If you need user manual, add the followings too:
 
-<pre>export MANPATH=/usr/local/texlive/2014/texmf-dist/doc/man:$MANPATH  
+<pre># ~/.bash_profile
+export MANPATH=/usr/local/texlive/2014/texmf-dist/doc/man:$MANPATH  
 export INFOPATH=/usr/local/texlive/2014/texmf-dist/doc/info:$INFOPATH  </pre>
+In order to build the documents with Chinese characters, you need to add the four Adobe Chinese fonts:
+
+<pre>$ mkdir -p ~/texmf/fonts    
+$ cp YOUR_FONTS.TTF_OTF ~/texmf/fonts</pre>
 ''After that'', please install Pandoc from package manager.
 
-<pre>$ sudo apt-get install pandoc</pre>
+<pre>$ sudo apt-get install pandoc
+$ mtxrun --script fonts --reload</pre>
 Standalone pandoc package is available on https://github.com/jgm/pandoc/releases.
 
-''Finally'', please download the latest version of zhfont from https://github.com/liyanrui/zhfonts, then replace the original files with it:
+''Then'' install the <code>zhfonts</code> module for ConTeXt:
 
-<pre>$ cp t-* /YOUR/INSTALL/PATH/texlive/2014/texmf-dist/doc/context/third/context-notes-zh-cn/src/</pre>
+<pre>$ mkdir -p ~/texmf/tex/context/third    
+$ cd ~/texmf/tex/context/third  
+$ git clone https://github.com/liyanrui/zhfonts.git
+$ luatools --generate</pre>
 ''Now'', we can generate wiki and pdf file using Texlive and pandoc.
 
-For building steps, please refer to the Makefile in hpc-maintenance-docs repo http://git.hpc.sjtu.edu.cn/docs/hpc-maintenance-docs/blob/master/Makefile.
+== For Microsoft Windows ==
 
-= Setup the workflow on Windows =
-
-At the very beginnning, Windows users are required to install [https://cygwin.com/ Cygwin] to make the Linux tools take effect. Pleas check the following tools during installation:
+At the very beginning, Windows users are required to install [https://cygwin.com/ Cygwin] to make the Linux tools take effect. Pleas check the following tools during installation:
 
 * Base:sed
 * Devel: make
@@ -73,16 +83,27 @@ After installation, a shortcut of Cygwin will be added on your Desktop.
 
 ''Secondly'', install [https://www.tug.org/texlive/ TeXLive] 2014 by running <code>install-tl-windows.bat</code> in the ISO image. Commands of Tex Live will be automatically added to your PATH.
 
-Then install extra fonts required by the HPC template. Download fonts <code>AdobStongStd</code>, <code>AdobHeitiStd</code>, <code>AdobeFangsongStd</code>and <code>AdobKaitiStd</code>, then copy them into YOUR_SYSTEM_PARTITION:\windows\fonts.
+Then install extra fonts required by the HPC template. Download fonts <code>AdobStongStd</code>, <code>AdobHeitiStd</code>, <code>AdobeFangsongStd</code>and <code>AdobKaitiStd</code>, then copy them into <code>X:\Windows\Fonts</code>.
 
 ''After that'', install <code>zhfonts</code> for the context engine.
 
-# Get zhfonts from its [https://github.com/liyanrui/zhfonts github page].
-# Copy the folder zhfonts into <code>texlive\\2014\\texmf-dist\\tex\\context\\third</code>.
-# Run <code>luatools --generate</code> to make zhfonts take effect, run <code>mtxrun --script fonts --reload</code> to reload the fonts.
+<ol style="list-style-type: decimal;">
+<li>Get zhfonts from its [https://github.com/liyanrui/zhfonts github page].</li>
+<li>Copy the folder zhfonts into <code>texlive\2014\texmf-dist\tex\context\third</code>.</li>
+<li><p>Make <code>zhfonts</code> to take effect, then reload the font cache. The following commands should be typed in Cygwin window:</p>
+<pre>luatools --generate
+mtxrun --script fonts --reload</pre></li></ol>
 
 Open Cygwin and now you should be able to use git and build the HPC sample documents.
 
+= Build the sample document <code>sample.mkd</code> =
+
+The document processing flow depends on some style files. It is recommended to clone the whole <code>hpc-public-docs</code> project:
+
+<pre>$ git clone https://github.com/sjtuhpcc/hpc-public-docs.git</pre>
+Then compile <code>sample.mkd</code> into PDF, wiki, Micosoft Docx formats. Generated files can be found in <code>pdf</code>, <code>wiki</code>, and <code>docx</code> separately.
+
+<pre>$ make sample.pdf sample.wiki sample.docx</pre>
 = Reference =
 
 * “gist: Configure ConTeXt environment after installing TeX” https://gist.github.com/weijianwen/4a3794946982f4cc0b31

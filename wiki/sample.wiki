@@ -1,0 +1,44 @@
+A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document. A brief introduction for the document.
+
+= A Level-1 section which is ''NOT'' listed in ToC =
+
+Lists can be nested in Markdown:
+
+* Here it is.
+* Don’t do evil.
+** Cats are good.
+** Dogs are bad.
+* [http://www.google.com Link] in Markdown is simple. Check http://www.google.com.
+
+= A Level-1 section which is listed in ToC =
+
+== A Level-2 section ==
+
+=== A Level-3 section ===
+
+==== A Level-4 section ====
+
+Markdown has simple syntax to support code display, with inline style <code>rm -rf /</code> or in separate section as follows:
+
+<pre>SSH Port: 22
+Username: YOUR_USERNAME
+Password: YOUR_PASSWORD
+Home: /lustre/home/YOUR_HOME</pre>
+Code can be nested in to the list too:
+
+<ol style="list-style-type: decimal;">
+<li><p>Delete Windows:</p>
+<pre>format c</pre></li>
+<li><p>Install Linux:</p>
+<pre>$ uanme -a</pre></li></ol>
+
+Markdown has limited but yet useful support for image. Please adjust the image to proper size before inserting them into the document.
+
+[[Image:macvpn.jpg|frame|none|alt=|caption A Image Demo]]
+
+More Markdown can be viewed on [http://pandoc.org/README.html Pandoc Manual].
+
+= Reference =
+
+* “Pandoc Manual” http://pandoc.org/README.html
+* “It is nice to add a reference at the end of the document.” http://www.ee.surrey.ac.uk/Teaching/Unix/
