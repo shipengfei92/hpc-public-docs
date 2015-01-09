@@ -1,7 +1,7 @@
 Public Documents from HPCC in SJTU
 ======
 
-```hpc-public-docs``` is a project to host public documents from [Center for High Performance Center in Shanghai Jiaotong University](http://hpc.sjtu.edu.cn/). The online wiki version can be viewed via <http://pi.sjtu.edu.cn/docs>.
+```hpc-public-docs``` is a project to host public documents from [Center for High Performance Center in Shanghai Jiao Tong University](http://hpc.sjtu.edu.cn/). The online wiki version can be viewed via <http://pi.sjtu.edu.cn/docs>.
 
 Build
 ------
